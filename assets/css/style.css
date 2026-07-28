@@ -204,14 +204,13 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
   margin-top: 14px;
 }
 .album-artist { color: var(--ink); font-size: 13px; margin-top: 4px; }
-.album-listen {
+.album-links { display: flex; gap: 18px; margin-top: 8px; }
+.album-links a {
   color: var(--blue);
   font-style: italic;
   font-size: 13px;
-  margin-top: 8px;
-  text-decoration: underline;
 }
-.album:hover img { outline: 3px solid var(--blue); }
+.album img:hover { outline: 3px solid var(--blue); }
 
 /* ---------- publications ---------- */
 .pubs p { margin-bottom: 1.4em; overflow-wrap: break-word; }
