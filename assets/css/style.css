@@ -267,6 +267,11 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 }
 .contact-form button:hover { background: var(--blue); }
 
+/* Touch screens have no hover: always show the "View" hint */
+@media (hover: none) {
+  .banner .label .view { opacity: 1; }
+}
+
 /* ---------- responsive ---------- */
 @media (max-width: 800px) {
   .site-header { justify-content: center; }
