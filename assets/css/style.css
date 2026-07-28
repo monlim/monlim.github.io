@@ -26,6 +26,16 @@ body {
 a { color: var(--blue); }
 img { max-width: 100%; height: auto; display: block; }
 
+/* ---------- cursor effect overlay ---------- */
+#fx {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 40;   /* above content, below the WORKS dropdown (z-index 50) */
+}
+
 /* ---------- header ---------- */
 .site-header {
   display: flex;
