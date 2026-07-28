@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo animation lab | Monica Lim</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/img/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital@0;1&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --blue: #002AF5; --ink: #080808; --chip: #e5e2da; }
+  * { margin: 0; box-sizing: border-box; }
+  body { font-family: "Courier Prime", monospace; color: var(--ink); background: #fff; }
+  .bar {
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    padding: 12px 16px; border-bottom: 1px solid #eee;
+  }
+  .bar button {
+    font-family: "Source Code Pro", monospace; font-size: 13px; letter-spacing: .08em;
+    border: 1px solid var(--blue); background: #fff; color: var(--blue);
+    padding: 7px 14px; cursor: pointer;
+  }
+  .bar button.on { background: var(--blue); color: #fff; }
+  .bar button.replay { border-color: #999; color: #555; margin-left: 12px; }
+
+  /* replica of the real site header */
+  .site-header {
+    display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+    flex-wrap: wrap; max-width: 1210px; margin: 0 auto; padding: 22px 20px 10px;
+  }
+  .logo { position: relative; display: inline-block; }
+  .logo img, .logo canvas { width: 191px; height: auto; display: block; }
+  .nav { display: flex; gap: 2px; flex-wrap: wrap; }
+  .nav a {
+    font-size: 15px; letter-spacing: .18em; text-decoration: none;
+    color: var(--blue); padding: 5px 13px; white-space: nowrap;
+  }
+  .nav a.active { background: var(--chip); }
+  main { max-width: 760px; margin: 0 auto; padding: 50px 20px; }
+  .desc { color: var(--blue); font-style: italic; min-height: 3em; margin-bottom: 20px; }
+  p { line-height: 1.55; margin-bottom: 1em; }
+
+  /* glitch layers */
+  .logo .g { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+  .logo .g img { position: absolute; inset: 0; }
+</style>
+</head>
+<body>
+<div class="bar">
+  <button data-m="write" class="on">1 WRITE-ON</button>
+  <button data-m="boil">2 BOIL</button>
+  <button data-m="glitch">3 GLITCH</button>
+  <button data-m="ripple">4 SOUND RIPPLE</button>
+  <button class="replay" id="replay">↻ replay</button>
+</div>
+
+<header class="site-header">
+  <a class="logo" href="#" id="logo">
+    <img src="/assets/img/logo.png" alt="Monica Lim" id="logoimg">
+    <span class="g" id="g1"><img src="/assets/img/logo.png" alt=""></span>
+    <span class="g" id="g2"><img src="/assets/img/logo.png" alt=""></span>
+  </a>
+  <nav class="nav">
+    <a href="#" class="active">HOME</a><a href="#">BIO</a><a href="#">WORKS</a>
+    <a href="#">PUBLICATIONS</a><a href="#">PRESS</a><a href="#">CONTACT</a>
+  </nav>
+</header>
+
+<main>
+  <p class="desc" id="desc"></p>
+  <p>The header above is a live replica of the real one. Switch modes, hit replay,
+  and hover / run your cursor over the logo to see interactive behaviours.</p>
+</main>
+
+<script>
+(() => {
+  const logo = document.getElementById('logo');
+  const img = document.getElementById('logoimg');
+  const g1 = document.getElementById('g1'), g2 = document.getElementById('g2');
+  const desc = document.getElementById('desc');
+  const DESCS = {
+    write: 'WRITE-ON — the logotype is revealed left to right on every page load, as if being handwritten. Runs once, ~1.4s, then stays put.',
+    boil: 'BOIL — the logo is constantly, minutely redrawn (±1px flicker at ~11fps), like hand-drawn animation. Feels alive without moving anywhere.',
+    glitch: 'GLITCH — every few seconds a 250ms burst: horizontal slices shear apart with blue ghost offsets. Digital noise against the handwriting.',
+    ripple: 'SOUND RIPPLE — hover: a sine wave runs through the letterforms like a signal on a scope, amplitude driven by your cursor speed. Settles when you leave.'
+  };
+
+  let mode = 'write';
+  let raf = null, timer = null;
+  let canvas = null, cctx = null;
+
+  function cleanup() {
+    if (raf) cancelAnimationFrame(raf), raf = null;
+    if (timer) clearInterval(timer), timer = null;
+    img.style.transform = '';
+    img.style.webkitMaskImage = img.style.maskImage = '';
+    img.style.display = '';
+    g1.style.opacity = g2.style.opacity = 0;
+    if (canvas) { canvas.remove(); canvas = null; cctx = null; }
+  }
+
+  // 1 WRITE-ON
+  function write() {
+    const t0 = performance.now(), DUR = 1400;
+    function step(now) {
+      const p = Math.min((now - t0) / DUR, 1);
+      const e = 1 - Math.pow(1 - p, 2.2);
+      const pct = e * 112;
+      const m = `linear-gradient(100deg, #000 ${pct}%, transparent ${pct + 7}%)`;
+      img.style.webkitMaskImage = m; img.style.maskImage = m;
+      if (p < 1) raf = requestAnimationFrame(step);
+      else img.style.webkitMaskImage = img.style.maskImage = '';
+    }
+    raf = requestAnimationFrame(step);
+  }
+
+  // 2 BOIL
+  function boil() {
+    timer = setInterval(() => {
+      const r = () => (Math.random() - .5);
+      img.style.transform =
+        `translate(${r() * 1.6}px, ${r() * 1.6}px) rotate(${r() * 0.9}deg) skewX(${r() * 1.2}deg)`;
+    }, 90);
+  }
+
+  // 3 GLITCH
+  function glitch() {
+    function burst() {
+      const end = performance.now() + 250;
+      function step() {
+        if (performance.now() > end) {
+          g1.style.opacity = g2.style.opacity = 0;
+          img.style.transform = '';
+          return;
+        }
+        const y1 = Math.random() * 60, y2 = Math.random() * 60;
+        g1.style.opacity = .75;
+        g1.style.clipPath = `inset(${y1}% 0 ${Math.max(0, 100 - y1 - 22)}% 0)`;
+        g1.style.transform = `translateX(${(Math.random() - .5) * 14}px)`;
+        g1.style.filter = 'hue-rotate(150deg) saturate(3)';
+        g2.style.opacity = .6;
+        g2.style.clipPath = `inset(${y2}% 0 ${Math.max(0, 100 - y2 - 14)}% 0)`;
+        g2.style.transform = `translateX(${(Math.random() - .5) * 10}px)`;
+        g2.style.filter = 'invert(1) hue-rotate(180deg)';
+        img.style.transform = Math.random() < .3 ? `translateX(${(Math.random() - .5) * 3}px)` : '';
+        raf = requestAnimationFrame(step);
+      }
+      step();
+    }
+    burst();
+    timer = setInterval(burst, 2600 + Math.random() * 1800);
+  }
+
+  // 4 SOUND RIPPLE
+  function ripple() {
+    canvas = document.createElement('canvas');
+    logo.appendChild(canvas);
+    img.style.display = 'none';
+    const W = 191, H = Math.round(191 * img.naturalHeight / img.naturalWidth);
+    const DPR = Math.min(devicePixelRatio || 1, 2);
+    canvas.width = W * DPR; canvas.height = (H + 16) * DPR;
+    canvas.style.width = W + 'px'; canvas.style.height = (H + 16) + 'px';
+    cctx = canvas.getContext('2d');
+    cctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    let amp = 0, target = 0, t = 0, lastX = null;
+    logo.addEventListener('pointermove', e => {
+      if (lastX !== null) target = Math.min(6, Math.abs(e.clientX - lastX) * .45 + 1.5);
+      lastX = e.clientX;
+    });
+    logo.addEventListener('pointerleave', () => { target = 0; lastX = null; });
+    function step() {
+      t += .18;
+      amp += (target - amp) * .07;
+      target *= .96;
+      cctx.clearRect(0, 0, W, H + 16);
+      const SL = 2;
+      for (let x = 0; x < W; x += SL) {
+        const dy = Math.sin(x * .11 + t) * amp;
+        cctx.drawImage(img, x / W * img.naturalWidth, 0, SL / W * img.naturalWidth, img.naturalHeight,
+                       x, 8 + dy, SL, H);
+      }
+      raf = requestAnimationFrame(step);
+    }
+    if (img.complete) step(); else img.onload = step;
+  }
+
+  const fns = { write, boil, glitch, ripple };
+  function run() { cleanup(); desc.textContent = DESCS[mode]; fns[mode](); }
+  document.querySelectorAll('.bar button[data-m]').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelector('.bar .on').classList.remove('on');
+      b.classList.add('on');
+      mode = b.dataset.m;
+      run();
+    });
+  });
+  document.getElementById('replay').addEventListener('click', run);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    desc.textContent = 'Your system has "reduce motion" on — animations are disabled, which is exactly what site visitors with that setting would experience.';
+  } else run();
+})();
+</script>
+</body>
+</html>
