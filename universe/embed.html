@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Universe</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Source+Code+Pro&display=swap">
+</head>
+
+<style>
+    body {
+        background-color: #FFF;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    h1 {
+        font-family: "Courier Prime", monospace;
+        font-size: 20pt;
+        text-align: center;
+        color: rgba(0, 42, 245, 255);
+    }
+    h2 {
+        font-family: "Courier Prime", monospace;
+        font-size: 14pt;
+        text-align: center;
+        color: rgba(0, 42, 245, 255);
+    }
+
+    p {
+        font-family: "Source Code Pro", monospace;
+        font-size: 11pt;
+        color: rgba(1, 1, 1, 255);
+    }
+
+    .set {
+        width: 100%;
+        display: grid;
+        margin: 0 auto;
+        grid-template-columns: 1fr auto 1fr;
+        grid-template-rows: 1fr auto;
+        grid-template-areas:
+        "video video video"
+        ". buttons .";
+    }
+
+    .video {
+        grid-area: video;
+        width: 100%;
+        padding-top: 56.25%;
+        position: relative;
+
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .buttons {
+        grid-area: buttons;
+    }
+
+    iframe {
+        grid-area: iframe;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    button {
+        font-family: "Courier Prime", "Courier New", monospace;
+        font-size: 20pt;
+        text-align: center;
+        color: rgba(1, 1, 1, 255);
+        text-decoration: none;
+
+        background-color: rgba(255, 255, 255, 255);
+        border: none;
+
+        padding: 10pt 20pt;
+        display: inline-block;
+
+        transition: color 0.1s linear, background-color 0.5s linear, box-shadow 0.5s linear;
+    }
+    button:hover {
+        color: rgba(0, 42, 245, 255);
+        transition: color 0.1s, background-color 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+    }
+    button:disabled {
+        color: rgba(0, 42, 245, 255);
+        transition: color 0.1s, background-color 0.2s, box-shadow 0.2s;
+    }
+    button:active {
+        color: rgba(1, 1, 1, 255);
+        transition: color 0.1s, background-color 0.1s, box-shadow 0.1s;
+    }
+    button:focus {
+        outline: 0;
+    }
+</style>
+
+<body>
+<section class="set">
+    <div class="video">
+        <iframe id="set0cam0"
+                src="https://player.vimeo.com/video/471665167"
+                frameborder="0"
+                style="z-index: 1"
+                frameborder="0">
+        </iframe>
+        <iframe id="set0cam1"
+                src="https://player.vimeo.com/video/471686235"
+                style="z-index: -1"
+                frameborder="0">
+        </iframe>
+        <iframe id="set0cam2"
+                src="https://player.vimeo.com/video/471702228"
+                style="z-index: -1"
+                frameborder="0">
+        </iframe>
+    </div>
+    <div class="buttons">
+        <button id="set0cam0button" onclick="setcam(0, 0)" disabled>A</button>
+        <button id="set0cam1button" onclick="setcam(0, 1)">B</button>
+        <button id="set0cam2button" onclick="setcam(0, 2)">C</button>
+    </div>
+</section>
+
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script>
+    // Generate datastructures
+    let sets = [3]; // Each element in this array specifies the number of videos in that set.
+    let cams = new Array(sets.length);
+    let playing = new Array(sets.length);
+    for (let i=0; i<sets.length; i++) {
+        cams[i] = new Array(sets[i]);
+        playing[i] = false;
+    }
+
+    // Populate datastructures
+    for (let i=0; i<sets.length; i++) {
+        for (let j=0; j<sets[i]; j++) {
+            cams[i][j] = new Vimeo.Player(document.getElementById("set" + i + "cam" + j));
+            cams[i][j].setAutopause(false);
+
+            cams[i][j].on('play', function(data) {
+                if (playing[i] === true) {return;} // Already playing, cancel request
+                playing[i] = true; // Log this set as currently playing
+
+                // Attempt to play all the others
+                for (let k = 0; k < sets[i]; k++) {
+                    if (k === j) {
+                        continue;
+                    } // Don't attempt playing self again
+
+                    // Play this
+                    cams[i][k].play().then(function() {
+                        // Sync timecodes
+                        cams[i][j].getCurrentTime().then(function(duration) {
+                            cams[i][k].setCurrentTime(duration);
+                        });
+                    });
+                }
+            });
+
+            cams[i][j].on('pause', function(data) {
+                if (playing[i] === false) {return;} // Already paused, cancel request
+                playing[i] = false;  // Log this one as currently paused
+
+                // Attempt to pause all the others
+                for (let k = 0; k < sets[i]; k++) {
+                    if (k === j) {continue;} // Don't attempt pausing self again
+
+                    // Pause this
+                    cams[i][k].pause().then(function() {
+                        // Sync timecodes
+                        cams[i][j].getCurrentTime().then(function(duration) {
+                            cams[i][k].setCurrentTime(duration);
+                        });
+                    });
+                }
+            });
+        }
+    }
+
+    function setcam(set, cam) {
+        for (let i=0; i<sets[set]; i++) {
+            document.getElementById("set" + set + "cam" + i + "button").disabled = false;
+            let j = document.getElementById("set" + set + "cam" + i);
+            if (i === cam) {
+                j.style.zIndex = "1";
+            } else {
+                j.style.zIndex = "-1";
+            }
+        }
+        document.getElementById("set" + set + "cam" + cam + "button").disabled = true;
+    }
+</script>
+
+</body>
+</html>
