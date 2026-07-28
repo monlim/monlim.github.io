@@ -187,6 +187,32 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 /* ---------- universe ---------- */
 .universe p { margin-bottom: 1.15em; }
 
+/* ---------- music (albums) ---------- */
+.albums {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 40px 30px;
+  padding: 20px 0 40px;
+}
+.album { display: flex; flex-direction: column; text-decoration: none; }
+.album img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.album-title {
+  font-family: var(--code);
+  color: var(--blue);
+  font-size: 16px;
+  letter-spacing: .06em;
+  margin-top: 14px;
+}
+.album-artist { color: var(--ink); font-size: 13px; margin-top: 4px; }
+.album-listen {
+  color: var(--blue);
+  font-style: italic;
+  font-size: 13px;
+  margin-top: 8px;
+  text-decoration: underline;
+}
+.album:hover img { outline: 3px solid var(--blue); }
+
 /* ---------- publications ---------- */
 .pubs p { margin-bottom: 1.4em; overflow-wrap: break-word; }
 
