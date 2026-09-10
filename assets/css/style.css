@@ -89,8 +89,11 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 .social img { width: 27px; height: 27px; }
 
 /* ---------- home ---------- */
-.home-hero { display: flex; justify-content: center; padding: 60px 20px; }
-.home-hero img { width: 100%; max-width: 750px; }
+.home-hero { display: flex; justify-content: center; padding: 40px 20px 24px; }
+/* column flex shrinks the figure to the image's width, so the credit sits flush left under it */
+.hero-fig { margin: 0; display: flex; flex-direction: column; }
+.hero-fig img { width: auto; max-width: 100%; max-height: 74vh; }
+.hero-fig figcaption { font-size: 12px; margin-top: 8px; }
 
 /* ---------- bio ---------- */
 .bio-wrap { max-width: 750px; margin: 0 auto; }
