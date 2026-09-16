@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Playful directions | Monica Lim</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Source+Code+Pro:wght@400;600&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1&family=Syne:wght@400..800&family=Instrument+Serif:ital@0;1&family=Anton&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#002AF5; --ink:#080808; --chip:#e5e2da; --yellow:#ffd900;
+    --mono:"Courier Prime","Courier New",monospace;
+    --code:"Source Code Pro","Courier New",monospace;
+    --display:"Source Code Pro","Courier New",monospace; /* swapped by the buttons */
+  }
+  *{margin:0;box-sizing:border-box}
+  body{font-family:var(--mono);color:var(--ink);background:#fff;font-size:15px;line-height:1.55}
+  a{color:var(--blue)}
+
+  .topbar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.94);
+    backdrop-filter:blur(6px);border-bottom:1px solid #eee;padding:10px 18px;
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .topbar strong{font-family:var(--code);letter-spacing:.12em;font-size:13px;color:var(--blue);margin-right:6px}
+  .topbar a{font-family:var(--code);font-size:12px;letter-spacing:.06em;text-decoration:none;padding:4px 9px;border:1px solid #ddd}
+  .topbar a:hover{border-color:var(--blue)}
+
+  section{max-width:1100px;margin:0 auto;padding:62px 22px;border-bottom:1px solid #eee}
+  h2{font-family:var(--code);font-size:13px;letter-spacing:.2em;color:var(--blue);margin-bottom:6px}
+  .lede{max-width:620px;margin-bottom:26px;color:#444}
+  .note{max-width:620px;margin-top:18px;font-size:13px;color:#666;font-style:italic}
+
+  .ctrls{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:26px}
+  button{font-family:var(--code);font-size:12px;letter-spacing:.06em;border:1px solid var(--blue);
+    background:#fff;color:var(--blue);padding:7px 13px;cursor:pointer}
+  button.on{background:var(--blue);color:#fff}
+
+  /* ---------- 1. type ---------- */
+  .specimen{border:1px solid #eee;padding:30px 26px}
+  .spec-small .t{font-family:var(--display);font-size:27px;letter-spacing:.12em;color:var(--blue)}
+  .spec-big .t{font-family:var(--display);font-size:clamp(46px,9vw,124px);line-height:.95;
+    letter-spacing:-.01em;color:var(--blue);font-weight:600}
+  .spec-label{font-family:var(--code);font-size:11px;letter-spacing:.14em;color:#999;margin-bottom:10px}
+  .specimen + .specimen{margin-top:14px}
+  .specimen p{max-width:640px;margin-top:14px}
+
+  /* ---------- 2. variable axis on hover ---------- */
+  .axis{font-family:"Fraunces",serif;font-size:clamp(40px,8vw,104px);line-height:1.05;color:var(--blue);
+    font-variation-settings:"wght" 300,"SOFT" 0,"WONK" 0;cursor:default;display:inline-block;
+    transition:font-variation-settings .45s cubic-bezier(.2,.8,.2,1)}
+  .axis:hover{font-variation-settings:"wght" 800,"SOFT" 100,"WONK" 1}
+  .axis2{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(40px,8vw,104px);color:var(--blue);
+    font-variation-settings:"wdth" 100,"wght" 300;display:inline-block;
+    transition:font-variation-settings .45s cubic-bezier(.2,.8,.2,1)}
+  .axis2:hover{font-variation-settings:"wdth" 75,"wght" 800}
+
+  /* ---------- 3. works hover flood ---------- */
+  .flood{position:relative;overflow:hidden;background:#fff;padding:40px 30px;border:1px solid #eee}
+  .flood-bg{position:absolute;inset:0;background-size:cover;background-position:center;
+    opacity:0;transition:opacity .4s ease;filter:saturate(1.1)}
+  /* scrim keeps the titles readable whatever the image underneath */
+  .flood-bg::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.34)}
+  .flood.lit .flood-bg{opacity:1}
+  .flood.lit .flood-list a{color:#fff;mix-blend-mode:normal}
+  .flood-list{position:relative;z-index:2}
+  .flood-list a{display:block;font-family:var(--display);font-size:clamp(26px,5vw,58px);
+    line-height:1.12;text-decoration:none;color:var(--blue);transition:color .3s,transform .3s;
+    width:max-content;max-width:100%}
+  .flood-list a:hover{transform:translateX(16px)}
+
+  /* ---------- 4. banner rhythm ---------- */
+  .strip{display:flex;flex-direction:column;gap:4px}
+  .strip .b{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .strip .b img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+  .strip .b span{position:relative;z-index:2;font-family:var(--display);color:var(--blue);
+    background:#fff;padding:2px 9px;font-size:18px;letter-spacing:.08em}
+  .uniform .b{height:132px}
+  .varied .b:nth-child(1){height:188px}
+  .varied .b:nth-child(2){height:104px;margin-left:16%}
+  .varied .b:nth-child(3){height:150px;margin-right:24%}
+  .varied .b:nth-child(4){height:118px;margin-left:8%;margin-right:8%}
+
+  /* ---------- 5. typing ---------- */
+  .typed{max-width:640px;min-height:7.6em;white-space:pre-wrap}
+  .caret{display:inline-block;width:.55em;height:1.05em;background:var(--blue);
+    vertical-align:-.18em;animation:blink .9s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ---------- 6. click burst ---------- */
+  .burst{position:relative;height:230px;border:1px solid #eee;overflow:hidden;cursor:crosshair;
+    display:flex;align-items:center;justify-content:center}
+  .burst .hint{font-family:var(--code);font-size:12px;letter-spacing:.12em;color:#aaa}
+  #burstCanvas{position:absolute;inset:0}
+
+  @media (max-width:700px){ section{padding:44px 18px} }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <strong>PLAYFUL DIRECTIONS</strong>
+  <a href="#type">1 Type</a><a href="#axis">2 Living type</a><a href="#works">3 Works page</a>
+  <a href="#rhythm">4 Banner rhythm</a><a href="#typing">5 Typing</a><a href="#burst">6 Click burst</a>
+  <a href="/" style="border:0;color:#999">← site</a>
+</div>
+
+<!-- 1 -->
+<section id="type">
+  <h2>1 · TYPEFACE + SCALE</h2>
+  <p class="lede">The same work title in each candidate face, first at today's size, then at the
+  scale I'd argue for. Courier Prime stays as the body voice in every case — only titles change.</p>
+  <div class="ctrls" id="fontBtns">
+    <button data-f='"Source Code Pro","Courier New",monospace' class="on">Current (Source Code Pro)</button>
+    <button data-f='"Bricolage Grotesque",sans-serif'>Bricolage Grotesque</button>
+    <button data-f='"Fraunces",serif'>Fraunces</button>
+    <button data-f='"Syne",sans-serif'>Syne</button>
+    <button data-f='"Instrument Serif",serif'>Instrument Serif</button>
+    <button data-f='"Anton",sans-serif'>Anton</button>
+  </div>
+  <div class="specimen spec-small">
+    <div class="spec-label">TODAY — 27px</div>
+    <div class="t">OPERA FOR THE DEAD</div>
+    <p>An opera for the unmourned dead, staged as a funeral rite. Composition and sound design
+    by Monica Lim and Mindy Meng Wang.</p>
+  </div>
+  <div class="specimen spec-big">
+    <div class="spec-label">PROPOSED — large</div>
+    <div class="t">OPERA<br>FOR THE DEAD</div>
+    <p>An opera for the unmourned dead, staged as a funeral rite. Composition and sound design
+    by Monica Lim and Mindy Meng Wang.</p>
+  </div>
+  <p class="note">Redaction — the typeface built in six grades of halftone decay — isn't on Google
+  Fonts, so it isn't switchable here. It would need self-hosting, which is easy; I left it out so
+  nothing in this demo is hypothetical.</p>
+</section>
+
+<!-- 2 -->
+<section id="axis">
+  <h2>2 · TYPE THAT MOVES</h2>
+  <p class="lede">Variable fonts hold their shape on continuous dials rather than fixed weights,
+  so a title can be swept like a filter. Hover each line.</p>
+  <div class="axis">Extended Piano Studies</div>
+  <div style="height:18px"></div>
+  <div class="axis2">Chanting Machine</div>
+  <p class="note">Fraunces above (weight, softness and its "wonk" axis at once), Bricolage below
+  (narrowing as it thickens). Same idea, different personality.</p>
+</section>
+
+<!-- 3 -->
+<section id="works">
+  <h2>3 · THE WORKS PAGE</h2>
+  <p class="lede">Today this page is seven plain links. Here, hovering a category floods the page
+  with that work — your own images, doing the talking.</p>
+  <div class="flood" id="flood">
+    <div class="flood-bg" id="floodBg"></div>
+    <nav class="flood-list" id="floodList">
+      <a href="#" data-img="/assets/img/204248_cd2104937dab4bae9eb2a28e340569e7~mv2.jpg">MULTIFORM PERFORMANCE</a>
+      <a href="#" data-img="/assets/img/204248_bfb42a0520fd4d4598beccc70d3e59fb~mv2.png">MUSIC PERFORMANCE</a>
+      <a href="#" data-img="/assets/img/204248_03e5346e63df41b0b37826bec44e592a~mv2.png">NEW INSTRUMENTS</a>
+      <a href="#" data-img="/assets/img/204248_bc5176e10e9d4867806e13aff98a602a~mv2.png">DANCE</a>
+      <a href="#" data-img="/assets/img/204248_e200ba97c0d94657a89dc0de205ec2ea~mv2.jpg">INSTALLATIONS</a>
+      <a href="#" data-img="/assets/img/204248_34deba6932d74e6fb4982462a65ed5d6~mv2.jpg">LIVE ART</a>
+      <a href="#" data-img="/assets/img/204248_b221d3e44298482abb538eecb904a2b7~mv2.jpg">FILM &amp; SCREEN</a>
+    </nav>
+  </div>
+</section>
+
+<!-- 4 -->
+<section id="rhythm">
+  <h2>4 · BANNER RHYTHM</h2>
+  <p class="lede">Category pages currently stack identical strips. Below: the metronome, then the
+  same works given varied heights and indents.</p>
+  <div class="ctrls" id="rhythmBtns">
+    <button data-r="uniform" class="on">Uniform (today)</button>
+    <button data-r="varied">Varied</button>
+  </div>
+  <div class="strip uniform" id="strip">
+    <a class="b" href="#"><img src="/assets/img/204248_cd2104937dab4bae9eb2a28e340569e7~mv2.jpg" alt=""><span>OPERA FOR THE DEAD</span></a>
+    <a class="b" href="#"><img src="/assets/img/204248_e200ba97c0d94657a89dc0de205ec2ea~mv2.jpg" alt=""><span>GUAI</span></a>
+    <a class="b" href="#"><img src="/assets/img/204248_34deba6932d74e6fb4982462a65ed5d6~mv2.jpg" alt=""><span>SCRAPE ELEGY</span></a>
+    <a class="b" href="#"><img src="/assets/img/204248_b221d3e44298482abb538eecb904a2b7~mv2.jpg" alt=""><span>JAGAD</span></a>
+  </div>
+</section>
+
+<!-- 5 -->
+<section id="typing">
+  <h2>5 · TEXT THAT TYPES ITSELF</h2>
+  <p class="lede">Suited to a typewriter face. Best reserved for one or two pages — charming once,
+  irritating on every visit.</p>
+  <div class="ctrls"><button id="replayType">↻ replay</button></div>
+  <div class="typed" id="typed"></div>
+</section>
+
+<!-- 6 -->
+<section id="burst">
+  <h2>6 · CLICK BURST</h2>
+  <p class="lede">Your cursor effects follow movement but ignore clicks. Click anywhere in the box.</p>
+  <div class="burst" id="burstBox">
+    <canvas id="burstCanvas"></canvas>
+    <span class="hint">CLICK</span>
+  </div>
+</section>
+
+<section style="border:0">
+  <h2>NOT SHOWN HERE</h2>
+  <p class="lede">Two ideas that can't be faked in a demo. <strong>Audio-reactive mode</strong> — a
+  sound toggle playing one of your tracks, with the hero pulse and cursor effects following the
+  real audio instead of a fixed tempo — needs the actual audio file and your say-so about which
+  track. <strong>Glitch page transitions</strong> only make sense moving between real pages, so
+  they'd have to be built into the site itself to be judged.</p>
+</section>
+
+<script>
+(() => {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // 1 — font switcher
+  const fontBtns = document.getElementById('fontBtns');
+  fontBtns.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    fontBtns.querySelector('.on')?.classList.remove('on');
+    b.classList.add('on');
+    document.documentElement.style.setProperty('--display', b.dataset.f);
+  });
+
+  // 3 — hover flood
+  const flood = document.getElementById('flood'), bg = document.getElementById('floodBg');
+  document.getElementById('floodList').addEventListener('pointerover', e => {
+    const a = e.target.closest('a[data-img]'); if (!a) return;
+    bg.style.backgroundImage = `url("${a.dataset.img}")`;
+    flood.classList.add('lit');
+  });
+  flood.addEventListener('pointerleave', () => flood.classList.remove('lit'));
+
+  // 4 — rhythm toggle
+  const strip = document.getElementById('strip'), rb = document.getElementById('rhythmBtns');
+  rb.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    rb.querySelector('.on')?.classList.remove('on'); b.classList.add('on');
+    strip.className = 'strip ' + b.dataset.r;
+  });
+
+  // 5 — typing
+  const TEXT = "Hello! I am a composer, sound and new media artist. I work with installations, "
+    + "performance art, contemporary dance, screen, objects, code, bodies, insects, food and "
+    + "everything in between (yes, I am easily bored).";
+  const typed = document.getElementById('typed');
+  let typeTimer = null;
+  function runType() {
+    clearInterval(typeTimer);
+    if (reduced) { typed.textContent = TEXT; return; }
+    let i = 0;
+    typed.innerHTML = '<span class="caret"></span>';
+    typeTimer = setInterval(() => {
+      i++;
+      typed.innerHTML = TEXT.slice(0, i).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                        + '<span class="caret"></span>';
+      if (i >= TEXT.length) clearInterval(typeTimer);
+    }, 18);
+  }
+  document.getElementById('replayType').addEventListener('click', runType);
+  new IntersectionObserver((es, o) => {
+    es.forEach(en => { if (en.isIntersecting) { runType(); o.disconnect(); } });
+  }, {threshold:.4}).observe(typed);
+
+  // 6 — click burst
+  const box = document.getElementById('burstBox');
+  const cv = document.getElementById('burstCanvas'), cx = cv.getContext('2d');
+  const DPR = Math.min(devicePixelRatio || 1, 2);
+  function size() {
+    const r = box.getBoundingClientRect();
+    cv.width = r.width * DPR; cv.height = r.height * DPR;
+    cv.style.width = r.width + 'px'; cv.style.height = r.height + 'px';
+    cx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  size(); addEventListener('resize', size);
+  let parts = [];
+  box.addEventListener('pointerdown', e => {
+    const r = box.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    for (let i = 0; i < 26; i++) {
+      const a = (Math.PI * 2 * i) / 26 + Math.random() * .2;
+      const sp = 1.6 + Math.random() * 3.4;
+      parts.push({x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 1});
+    }
+  });
+  (function loop() {
+    cx.clearRect(0, 0, cv.width, cv.height);
+    parts = parts.filter(p => p.life > 0);
+    for (const p of parts) {
+      p.x += p.vx; p.y += p.vy; p.vx *= .97; p.vy *= .97; p.life -= .016;
+      cx.fillStyle = `rgba(0,42,245,${Math.max(p.life, 0)})`;
+      cx.beginPath(); cx.arc(p.x, p.y, 2.3, 0, 7); cx.fill();
+    }
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
+</body>
+</html>
