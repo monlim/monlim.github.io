@@ -228,7 +228,10 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 /* ---------- work pages ---------- */
 .work { max-width: 1105px; margin: 0 auto; }
 .work .media { max-width: 780px; margin: 0 auto 30px; }
-.work .media iframe, .work .media video { width: 100%; aspect-ratio: 16/9; border: 0; display: block; }
+/* 16:9 unless the clip is a different shape — a non-standard video sets its own
+   ratio on the .media wrapper, e.g. style="--ratio: 2.39" for cinemascope, so it
+   fills the frame instead of being letterboxed. */
+.work .media iframe, .work .media video { width: 100%; aspect-ratio: var(--ratio, 16/9); border: 0; display: block; }
 .work .media + .media { margin-top: 24px; }
 
 /* Title sits on its own row above the credits (column-reverse, since the credits
