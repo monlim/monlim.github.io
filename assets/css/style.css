@@ -146,9 +146,11 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
   display: block;
   font-family: var(--display);
   font-size: clamp(34px, 4.4vw, 58px);
+  line-height: 1.08;
   letter-spacing: 0.01em;
-  margin: 0 0 38px;
+  margin: 0 0 54px;
   color: var(--blue);
+  text-decoration: none;
   width: max-content;
   max-width: 100%;
   transition: color .3s, transform .3s;
@@ -209,10 +211,10 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
   font-size: 30px;
   font-weight: 400;
   letter-spacing: 0.03em;
+  text-transform: uppercase;     /* source text mixes cases; normalise here */
   color: var(--blue);
   background: #fff;
   padding: 0 6px;
-  text-decoration: underline;
 }
 .banner .label .view {
   font-style: italic;
@@ -252,6 +254,7 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
   line-height: 1;
   font-weight: 400;
   letter-spacing: 0.01em;
+  text-transform: uppercase;
   color: var(--blue);
   text-align: right;
   white-space: nowrap;
@@ -293,8 +296,10 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 /* ---------- publications ---------- */
 .pubs p { margin-bottom: 1.4em; overflow-wrap: break-word; }
 
-/* ---------- press (sans-serif styling like original) ---------- */
-.press { font-family: var(--sans); font-size: 14px; color: #333; }
+/* ---------- press ---------- */
+/* Body text now uses the site's typewriter face rather than the Wix-era
+   Helvetica; the quote is the one place left in a contrasting voice. */
+.press { font-family: var(--mono); font-size: 14px; color: #333; }
 .press h2 { font-family: var(--display); font-weight: 400; font-size: 32px; margin: 40px 0 18px; color: #000; }
 .press .about { display: flex; gap: 34px; align-items: flex-start; }
 .press .about img { width: 250px; }
@@ -302,10 +307,11 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 .press .cols > div { flex: 1 1 380px; }
 .press ul { padding-left: 20px; }
 .press li { margin-bottom: 7px; }
-.press .kv { display: grid; grid-template-columns: 110px 1fr; row-gap: 5px; }
+/* wider than the old Helvetica layout needed — the monospace labels are longer */
+.press .kv { display: grid; grid-template-columns: 152px 1fr; row-gap: 5px; }
 .press .btn {
   display: inline-block;
-  font-family: var(--sans);
+  font-family: var(--mono);
   color: var(--blue);
   border: 2px solid var(--blue);
   border-radius: 20px;
@@ -321,23 +327,23 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
   color: #fff;
   margin: 60px calc(50% - 50vw) 0;
   padding: 90px calc(50vw - 50% + 20px);
-  font-family: var(--sans);
+  font-family: var(--display);
 }
-.quote-band .q { font-size: 26px; font-style: italic; font-weight: 300; max-width: 820px; }
+.quote-band .q { font-size: 32px; font-style: italic; font-weight: 400; line-height: 1.3; max-width: 820px; }
 .quote-band .who { margin-top: 34px; font-size: 14px; }
 .photo-band {
   background: #000;
   color: #fff;
   margin: 0 calc(50% - 50vw);
   padding: 50px calc(50vw - 50% + 20px) 60px;
-  font-family: var(--sans);
+  font-family: var(--mono);
 }
 .photo-band h2 { color: #fff; }
 .photo-band .strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; margin: 26px 0 40px; }
 .photo-band .strip img { width: 100%; height: 230px; object-fit: cover; }
 .photo-band .btn-wrap { text-align: center; }
 .photo-band .btn {
-  display: inline-block; font-family: var(--sans);
+  display: inline-block; font-family: var(--mono);
   color: #fff; border: 2px solid #fff; border-radius: 20px;
   padding: 7px 22px; text-decoration: none;
 }
@@ -345,9 +351,7 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 
 /* ---------- contact ---------- */
 .contact-page {
-  background-image: linear-gradient(rgba(255,255,255,.62), rgba(255,255,255,.62)), url("../img/contact-pattern.png");
-  background-size: cover;
-  background-position: center top;
+  background: #fff;
 }
 .contact-inner { max-width: 1210px; margin: 0 auto; padding: 90px 20px 60px; min-height: 62vh; }
 .contact-inner h2 {

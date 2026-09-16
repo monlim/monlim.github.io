@@ -28,10 +28,9 @@
       max = Math.max(max, probe.getBoundingClientRect().width);
     }
     probe.remove();
-    if (max > 0) {
-      el.style.display = el.style.display || 'inline-block';
-      el.style.minWidth = Math.ceil(max) + 'px';
-    }
+    // Only reserve the width — never touch display. Forcing inline-block here
+    // silently turned the stacked works links into a two-column grid.
+    if (max > 0) el.style.minWidth = Math.ceil(max) + 'px';
   }
 
   // ---------- header wordmark ----------
