@@ -1,6 +1,17 @@
 /* Monica Lim — monicalim.online
    Rebuilt from Wix original. Brand: electric blue #002AF5, typewriter type. */
 
+/* Redaction — Jeremy Mickel / MCKL, SIL Open Font License 1.1, commissioned for
+   Titus Kaphar & Reginald Dwayne Betts' The Redaction at MoMA PS1. Its grades are
+   progressive halftone decay; type-fx.js steps through them. Licence: OFL.txt
+   alongside these files. Subset to Latin to keep the payload small. */
+@font-face{font-family:"Redaction";src:url("../fonts/redaction/Redaction-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Redaction 20";src:url("../fonts/redaction/Redaction_20-Regular.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Redaction 35";src:url("../fonts/redaction/Redaction_35-Regular.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Redaction 50";src:url("../fonts/redaction/Redaction_50-Regular.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Redaction 70";src:url("../fonts/redaction/Redaction_70-Regular.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Redaction 100";src:url("../fonts/redaction/Redaction_100-Regular.woff2") format("woff2");font-display:swap}
+
 :root {
   --blue: #002AF5;
   --ink: #080808;
@@ -9,6 +20,7 @@
   --mono: "Courier Prime", "Courier New", Courier, monospace;
   --code: "Source Code Pro", "Courier New", monospace;
   --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --display: "Redaction", Georgia, serif;   /* titles and the wordmark */
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -48,6 +60,19 @@ img { max-width: 100%; height: auto; display: block; }
   padding: 22px 20px 10px;
 }
 .logo img { width: 191px; height: auto; }
+
+/* Wordmark set live in Redaction; type-fx.js decays the letters individually.
+   Each letter is pinned to the width of its widest grade, so nothing shifts. */
+.logo-type {
+  font-family: var(--display);
+  font-size: 38px;
+  line-height: 1.1;
+  color: var(--blue);
+  text-decoration: none;
+  white-space: nowrap;
+  display: inline-block;
+}
+.logo-type span { display: inline-block; }
 
 .nav { display: flex; align-items: center; flex-wrap: wrap; gap: 2px; }
 .nav a {
@@ -119,8 +144,9 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 .works-list { padding: 30px 0; }
 .works-list a {
   display: block;
-  font-size: 30px;
-  letter-spacing: 0.06em;
+  font-family: var(--display);
+  font-size: clamp(34px, 4.4vw, 58px);
+  letter-spacing: 0.01em;
   margin: 0 0 38px;
   color: var(--blue);
   width: max-content;
@@ -179,10 +205,10 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
   text-align: center;
 }
 .banner .label .title {
-  font-family: var(--code);
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-family: var(--display);
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
   color: var(--blue);
   background: #fff;
   padding: 0 6px;
@@ -203,11 +229,14 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 .work .media iframe, .work .media video { width: 100%; aspect-ratio: 16/9; border: 0; display: block; }
 .work .media + .media { margin-top: 24px; }
 
+/* Title sits on its own row above the credits (column-reverse, since the credits
+   come first in the markup). At the new scale a side-by-side row would crush the
+   credits into a narrow column. */
 .work-head {
   display: flex;
-  justify-content: space-between;
-  gap: 40px;
-  align-items: flex-start;
+  flex-direction: column-reverse;
+  align-items: stretch;
+  gap: 16px;
   margin-bottom: 34px;
 }
 .work-head .credits {
@@ -218,10 +247,11 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 }
 .work-head .credits p { margin-bottom: 1em; }
 .work-head .title {
-  font-family: var(--code);
-  font-size: 27px;
+  font-family: var(--display);
+  font-size: clamp(38px, 5.2vw, 76px);
+  line-height: 1;
   font-weight: 400;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.01em;
   color: var(--blue);
   text-align: right;
   white-space: nowrap;
@@ -245,9 +275,9 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 .album { display: flex; flex-direction: column; text-decoration: none; }
 .album img { width: 100%; aspect-ratio: 1; object-fit: cover; }
 .album-title {
-  font-family: var(--code);
+  font-family: var(--display);
   color: var(--blue);
-  font-size: 16px;
+  font-size: 21px;
   letter-spacing: .06em;
   margin-top: 14px;
 }
@@ -265,7 +295,7 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 
 /* ---------- press (sans-serif styling like original) ---------- */
 .press { font-family: var(--sans); font-size: 14px; color: #333; }
-.press h2 { font-family: var(--sans); font-weight: 400; font-size: 27px; margin: 40px 0 18px; color: #000; }
+.press h2 { font-family: var(--display); font-weight: 400; font-size: 32px; margin: 40px 0 18px; color: #000; }
 .press .about { display: flex; gap: 34px; align-items: flex-start; }
 .press .about img { width: 250px; }
 .press .cols { display: flex; gap: 60px; flex-wrap: wrap; }
@@ -321,11 +351,11 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 }
 .contact-inner { max-width: 1210px; margin: 0 auto; padding: 90px 20px 60px; min-height: 62vh; }
 .contact-inner h2 {
-  font-family: var(--code);
+  font-family: var(--display);
   color: var(--blue);
   font-weight: 400;
-  font-size: 26px;
-  letter-spacing: 0.14em;
+  font-size: 34px;
+  letter-spacing: 0.04em;
   margin-bottom: 14px;
 }
 .contact-inner .email-block { margin-bottom: 90px; margin-left: 15%; }
