@@ -35,6 +35,13 @@
     }
     return roughPath(pts, wobble);
   }
+  // A mark is positioned against its host, so the host must be a positioning
+  // context. Don't rely on the stylesheet for that: a browser holding a stale
+  // style.css would drop every mark into the top-left corner of the page.
+  function anchor(el) {
+    if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+  }
+
   function makeSvg(w, h, css) {
     const s = document.createElementNS(NS, 'svg');
     s.setAttribute('viewBox', `0 0 ${w} ${h}`);
@@ -56,6 +63,7 @@
   function circleNav(el) {
     const r = el.getBoundingClientRect();
     if (!r.width) return;
+    anchor(el);
     // generous vertical overshoot, or a wide short link reads as a flat lens
     const padX = 10, padY = 15;
     const w = r.width + padX * 2, h = r.height + padY * 2;
@@ -74,6 +82,7 @@
     const rects = range.getClientRects();
     if (!rects.length) return;
     const line = rects[rects.length - 1];        // last line, if it wrapped
+    anchor(el);
     const host = el.getBoundingClientRect();
     const w = Math.round(line.width), h = 12;
     if (w < 20) return;
