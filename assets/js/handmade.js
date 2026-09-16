@@ -1,7 +1,7 @@
 /* Handmade layer.
    1. Category banners are knocked fractionally out of line, re-rolled on every
       page load, so the stack is never laid out twice the same way.
-   2. Interface marks — the active nav item, press headings — are drawn as
+   2. Interface marks — the active nav item, the buttons — are drawn as
       wobbling strokes rather than boxes and rules. Each stroke is generated
       fresh and drawn twice, the way a pen goes round a word a second time.
    Desktop only for the banners: a rotated full-bleed block would overhang the
@@ -104,31 +104,10 @@
     el.style.background = 'none';               // retire the grey chip
   }
 
-  // Underline the words, not the column: a block heading is far wider than its
-  // text, so measure the text run itself.
-  function underline(el) {
-    const range = document.createRange();
-    range.selectNodeContents(el);
-    const rects = range.getClientRects();
-    if (!rects.length) return;
-    const line = rects[rects.length - 1];        // last line, if it wrapped
-    anchor(el);
-    const host = el.getBoundingClientRect();
-    const w = Math.round(line.width), h = 12;
-    if (w < 20) return;
-    const left = Math.round(line.left - host.left);
-    const top = Math.round(line.bottom - host.top);
-    const s = makeSvg(w, h, `position:absolute;left:${left}px;top:${top}px;width:${w}px;height:${h}px`);
-    stroke(s, roughPath([[1, 4], [w * .28, 4], [w * .61, 4], [w - 1, 4]], 2.0), 1.6);
-    stroke(s, roughPath([[5, 6.8], [w * .47, 6.8], [w - 5, 6.8]], 2.6), 1.0);
-    el.appendChild(s);
-  }
-
   function drawMarks() {
     document.querySelectorAll('[data-mark]').forEach(s => s.remove());
     const active = document.querySelector('.nav a.active');
     if (active) circleNav(active);
-    document.querySelectorAll('.press h2').forEach(underline);
     document.querySelectorAll('.contact-form button, .photo-band .btn').forEach(drawnBox);
   }
 

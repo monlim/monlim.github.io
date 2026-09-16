@@ -306,7 +306,7 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 /* Body text now uses the site's typewriter face rather than the Wix-era
    Helvetica; the quote is the one place left in a contrasting voice. */
 .press { font-family: var(--mono); font-size: 14px; color: #333; }
-.press h2 { position: relative; font-family: var(--display); font-weight: 400; font-size: 32px; margin: 40px 0 18px; color: var(--blue); }
+.press h2 { font-family: var(--display); font-weight: 400; font-size: 32px; margin: 40px 0 18px; color: var(--blue); }
 .press .about { display: flex; gap: 34px; align-items: flex-start; }
 .press .about img { width: 250px; }
 .press .cols { display: flex; gap: 60px; flex-wrap: wrap; }
