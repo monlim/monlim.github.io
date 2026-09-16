@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Handmade directions | Monica Lim</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<style>
+  body { background:#fff; }
+  .topbar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.94);
+    backdrop-filter:blur(6px);border-bottom:1px solid #eee;padding:10px 18px;
+    display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+  .topbar strong{font-family:var(--code);letter-spacing:.12em;font-size:13px;color:var(--blue);margin-right:6px}
+  .topbar a{font-family:var(--code);font-size:12px;letter-spacing:.06em;text-decoration:none;padding:4px 9px;border:1px solid #ddd}
+  .topbar a:hover{border-color:var(--blue)}
+
+  section{max-width:1100px;margin:0 auto;padding:58px 22px;border-bottom:1px solid #eee}
+  h2{font-family:var(--code);font-size:13px;letter-spacing:.2em;color:var(--blue);margin-bottom:6px}
+  .lede{max-width:650px;margin-bottom:24px;color:#444}
+  .note{max-width:650px;margin-top:18px;font-size:13px;color:#666;font-style:italic}
+  .ctrls{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:24px;align-items:center}
+  button{font-family:var(--code);font-size:12px;letter-spacing:.06em;border:1px solid var(--blue);
+    background:#fff;color:var(--blue);padding:7px 13px;cursor:pointer}
+  button.on{background:var(--blue);color:#fff}
+  button.roll{border-color:#999;color:#555}
+  .stage{border:1px solid #eee;padding:34px 26px}
+
+  /* 1 — wonky wordmark */
+  .wm{font-family:var(--display);font-size:46px;color:var(--blue);white-space:nowrap;
+      display:inline-block;line-height:1.5}
+  .wm span{display:inline-block;transform-origin:center 60%}
+
+  /* 2 — misaligned stack */
+  /* rotated blocks need room, or their corners collide with the neighbour */
+  .mstack{display:flex;flex-direction:column;gap:16px}
+  .mstack a{position:relative;display:block;overflow:hidden;height:150px;text-decoration:none;
+    background:#eee;transition:transform .3s}
+  .mstack img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .mstack .lbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .mstack .lbl span{font-family:var(--display);font-size:24px;text-transform:uppercase;
+    color:var(--blue);background:#fff;padding:1px 8px}
+
+  /* 3 — drawn marks */
+  .marks{display:flex;gap:46px;flex-wrap:wrap;align-items:flex-start}
+  .navdemo{display:flex;gap:4px;flex-wrap:wrap}
+  .navdemo a{position:relative;font-family:var(--mono);font-size:15px;letter-spacing:.18em;
+    text-decoration:none;color:var(--blue);padding:7px 15px;white-space:nowrap}
+  .navdemo svg{position:absolute;left:-6px;top:-6px;width:calc(100% + 12px);height:calc(100% + 12px);
+    overflow:visible;pointer-events:none}
+  .ruledemo{max-width:430px}
+  .ruledemo p{margin-bottom:6px}
+  .ruledemo svg{display:block;width:100%;height:16px;overflow:visible}
+
+  /* 4 — images as objects */
+  .objs{display:flex;gap:40px;flex-wrap:wrap;padding:18px 6px}
+  .objs figure{margin:0;width:210px}
+  .objs img{width:100%;display:block}
+  .objs.on img{box-shadow:0 10px 26px rgba(0,0,0,.20)}
+  .objs figcaption{font-size:12px;margin-top:9px;color:#555}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <strong>HANDMADE DIRECTIONS</strong>
+  <a href="#wordmark">1 Wordmark</a><a href="#stack">2 Misalignment</a>
+  <a href="#marks">3 Drawn marks</a><a href="#objects">4 Images as objects</a>
+  <a href="/" style="border:0;color:#999">← site</a>
+</div>
+
+<section id="wordmark">
+  <h2>1 · THE WORDMARK, KNOCKED OUT OF LINE</h2>
+  <p class="lede">Each letter gets its own rotation, size and baseline — re-rolled on every page
+  load, so the wordmark is never laid out twice the same way. The decay you already have keeps
+  running underneath.</p>
+  <div class="ctrls">
+    <button data-w="off">Today (straight)</button>
+    <button data-w="subtle" class="on">Subtle</button>
+    <button data-w="loose">Loose</button>
+    <button data-w="wild">Wild (reference-level)</button>
+    <button class="roll" id="rollWm">↻ re-roll</button>
+    <button class="roll" id="toggleDecay">decay: on</button>
+  </div>
+  <div class="stage"><span class="wm" id="wm"></span></div>
+  <p class="note">"Wild" includes the occasional flipped letter, as on Haocheng's site. Letters are
+  pinned to their widest decay grade first, so none of this can shift while it animates.</p>
+</section>
+
+<section id="stack">
+  <h2>2 · MISALIGNMENT, RE-ROLLED EACH VISIT</h2>
+  <p class="lede">Your banners already vary in height. Here they also sit at slightly different
+  angles and indents — a fraction of a degree, different every time the page loads.</p>
+  <div class="ctrls">
+    <button data-m="off">Aligned (today)</button>
+    <button data-m="on" class="on">Knocked out of line</button>
+    <button class="roll" id="rollStack">↻ re-roll</button>
+  </div>
+  <div class="mstack" id="mstack">
+    <a href="#"><img src="/assets/img/204248_cd2104937dab4bae9eb2a28e340569e7~mv2.jpg" alt=""><span class="lbl"><span>Opera For The Dead</span></span></a>
+    <a href="#"><img src="/assets/img/204248_e200ba97c0d94657a89dc0de205ec2ea~mv2.jpg" alt=""><span class="lbl"><span>Guài</span></span></a>
+    <a href="#"><img src="/assets/img/204248_34deba6932d74e6fb4982462a65ed5d6~mv2.jpg" alt=""><span class="lbl"><span>Scrape Elegy</span></span></a>
+    <a href="#"><img src="/assets/img/204248_b221d3e44298482abb538eecb904a2b7~mv2.jpg" alt=""><span class="lbl"><span>Jagad</span></span></a>
+  </div>
+</section>
+
+<section id="marks">
+  <h2>3 · DRAWN MARKS INSTEAD OF BOXES</h2>
+  <p class="lede">The grey rectangle on the active nav item, and rules between things, are the most
+  obviously software-made parts of the site. Drawn by hand-ish instead — each stroke is generated
+  with wobble, drawn twice like a pen going round again.</p>
+  <div class="ctrls">
+    <button data-k="off">Today</button>
+    <button data-k="on" class="on">Drawn</button>
+    <button class="roll" id="rollMarks">↻ re-roll</button>
+  </div>
+  <div class="stage marks">
+    <div>
+      <div style="font-family:var(--code);font-size:11px;letter-spacing:.14em;color:#aaa;margin-bottom:12px">ACTIVE NAV ITEM</div>
+      <nav class="navdemo" id="navdemo">
+        <a href="#">HOME</a><a href="#" class="active">BIO</a><a href="#">WORKS</a><a href="#">PRESS</a>
+      </nav>
+    </div>
+    <div class="ruledemo">
+      <div style="font-family:var(--code);font-size:11px;letter-spacing:.14em;color:#aaa;margin-bottom:12px">A RULE / UNDERLINE</div>
+      <p>Chanting Machine</p>
+      <div id="ruleHost"></div>
+      <p style="margin-top:10px">Monica Lim and Morgan May</p>
+    </div>
+  </div>
+</section>
+
+<section id="objects" style="border:0">
+  <h2>4 · IMAGES AS OBJECTS</h2>
+  <p class="lede">Photographs laid down rather than slotted in: a fraction of a degree off square,
+  with a soft shadow, as though resting on a surface.</p>
+  <div class="ctrls">
+    <button data-o="off">Flush (today)</button>
+    <button data-o="on" class="on">Laid down</button>
+    <button class="roll" id="rollObjs">↻ re-roll</button>
+  </div>
+  <div class="stage">
+    <div class="objs on" id="objs">
+      <figure><img src="/assets/img/album-chanting.jpg" alt=""><figcaption>Chanting Machine</figcaption></figure>
+      <figure><img src="/assets/img/album-extended-piano.jpg" alt=""><figcaption>Extended Piano Studies</figcaption></figure>
+      <figure><img src="/assets/img/album-oftd.jpg" alt=""><figcaption>Opera For The Dead</figcaption></figure>
+    </div>
+  </div>
+  <p class="note">Shown on the album covers, but it would apply to work-page galleries and press
+  photos too.</p>
+</section>
+
+<script>
+(() => {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const GRADES = ['Redaction','Redaction 20','Redaction 35','Redaction 50','Redaction 70','Redaction 100'];
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const face = g => `"${g}", Georgia, serif`;
+
+  // ---------- 1 wordmark ----------
+  const WM = { off:{r:0,s:0,y:0,flip:0}, subtle:{r:3,s:.06,y:.04,flip:0},
+               loose:{r:7,s:.14,y:.10,flip:0}, wild:{r:14,s:.26,y:.17,flip:.12} };
+  let wmMode = 'subtle', decayOn = true, decayTimers = [];
+  const wmEl = document.getElementById('wm');
+
+  function buildWordmark() {
+    decayTimers.forEach(clearInterval); decayTimers = [];
+    const cfg = WM[wmMode];
+    wmEl.innerHTML = '';
+    const letters = [];
+    for (const ch of 'Monica Lim') {
+      const s = document.createElement('span');
+      s.textContent = ch === ' ' ? ' ' : ch;
+      if (ch !== ' ') {
+        const flip = Math.random() < cfg.flip;
+        s.style.transform =
+          `rotate(${rnd(-cfg.r, cfg.r).toFixed(2)}deg) translateY(${rnd(-cfg.y, cfg.y).toFixed(3)}em)`
+          + (flip ? ' scaleY(-1)' : '');
+        s.style.fontSize = (1 + rnd(-cfg.s, cfg.s)).toFixed(3) + 'em';
+      }
+      wmEl.appendChild(s);
+      letters.push(s);
+    }
+    if (!decayOn || reduced) return;
+    letters.forEach((s, i) => {
+      if (s.textContent === ' ') return;
+      let g = Math.floor(Math.random() * GRADES.length);
+      decayTimers.push(setInterval(() => {
+        g = (g + 1) % GRADES.length;
+        s.style.fontFamily = face(GRADES[g]);
+      }, 1500 + i * 220 + Math.random() * 400));
+    });
+  }
+  document.querySelectorAll('[data-w]').forEach(b => b.addEventListener('click', () => {
+    document.querySelector('[data-w].on')?.classList.remove('on');
+    b.classList.add('on'); wmMode = b.dataset.w; buildWordmark();
+  }));
+  document.getElementById('rollWm').addEventListener('click', buildWordmark);
+  document.getElementById('toggleDecay').addEventListener('click', e => {
+    decayOn = !decayOn; e.target.textContent = 'decay: ' + (decayOn ? 'on' : 'off'); buildWordmark();
+  });
+  buildWordmark();
+
+  // ---------- 2 misaligned stack ----------
+  const stack = document.getElementById('mstack');
+  let stackOn = true;
+  function rollStack() {
+    [...stack.children].forEach(a => {
+      if (!stackOn) { a.style.transform = ''; a.style.margin = ''; a.style.height = ''; return; }
+      a.style.transform = `rotate(${rnd(-0.7, 0.7).toFixed(2)}deg)`;
+      a.style.marginLeft = rnd(0, 11).toFixed(1) + '%';
+      a.style.marginRight = rnd(0, 11).toFixed(1) + '%';
+      a.style.height = Math.round(rnd(120, 190)) + 'px';
+    });
+  }
+  document.querySelectorAll('[data-m]').forEach(b => b.addEventListener('click', () => {
+    document.querySelector('[data-m].on')?.classList.remove('on');
+    b.classList.add('on'); stackOn = b.dataset.m === 'on'; rollStack();
+  }));
+  document.getElementById('rollStack').addEventListener('click', rollStack);
+  rollStack();
+
+  // ---------- 3 drawn marks ----------
+  // A wobbling stroke, drawn twice — the way a pen goes round a word a second time.
+  function roughPath(pts, wobble) {
+    let d = '';
+    pts.forEach((p, i) => {
+      const x = p[0] + rnd(-wobble, wobble), y = p[1] + rnd(-wobble, wobble);
+      d += (i ? ' L ' : 'M ') + x.toFixed(1) + ' ' + y.toFixed(1);
+    });
+    return d;
+  }
+  function roughEllipse(cx, cy, rx, ry, wobble) {
+    const pts = [];
+    const start = rnd(-0.4, 0.4);
+    for (let a = start; a <= Math.PI * 2 + start + 0.5; a += 0.28) {
+      pts.push([cx + Math.cos(a) * rx, cy + Math.sin(a) * ry]);
+    }
+    return roughPath(pts, wobble);
+  }
+  function svg(w, h) {
+    const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    s.setAttribute('preserveAspectRatio', 'none');
+    return s;
+  }
+  function stroke(parent, d, width) {
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d', d);
+    p.setAttribute('fill', 'none');
+    p.setAttribute('stroke', 'var(--blue)');
+    p.setAttribute('stroke-width', width);
+    p.setAttribute('stroke-linecap', 'round');
+    parent.appendChild(p);
+  }
+  let marksOn = true;
+  function rollMarks() {
+    const active = document.querySelector('.navdemo a.active');
+    active.querySelector('svg')?.remove();
+    active.style.background = marksOn ? 'none' : 'var(--chip)';
+    if (marksOn) {
+      const r = active.getBoundingClientRect();
+      const w = r.width + 12, h = r.height + 12;
+      const s = svg(w, h);
+      // two passes, like going round again
+      stroke(s, roughEllipse(w/2, h/2, w/2 - 3, h/2 - 2, 1.6), 1.6);
+      stroke(s, roughEllipse(w/2, h/2, w/2 - 4, h/2 - 3, 2.2), 1.2);
+      active.appendChild(s);
+    }
+    const host = document.getElementById('ruleHost');
+    host.innerHTML = '';
+    if (marksOn) {
+      const s = svg(400, 16);
+      stroke(s, roughPath([[2,8],[100,8],[200,8],[300,8],[398,8]], 2.1), 1.7);
+      stroke(s, roughPath([[6,10],[140,10],[260,10],[394,10]], 2.6), 1.1);
+      host.appendChild(s);
+    } else {
+      host.innerHTML = '<div style="border-top:1px solid var(--blue);height:16px"></div>';
+    }
+  }
+  document.querySelectorAll('[data-k]').forEach(b => b.addEventListener('click', () => {
+    document.querySelector('[data-k].on')?.classList.remove('on');
+    b.classList.add('on'); marksOn = b.dataset.k === 'on'; rollMarks();
+  }));
+  document.getElementById('rollMarks').addEventListener('click', rollMarks);
+  document.fonts.ready.then(rollMarks);
+
+  // ---------- 4 images as objects ----------
+  const objs = document.getElementById('objs');
+  let objsOn = true;
+  function rollObjs() {
+    [...objs.children].forEach(f => {
+      f.style.transform = objsOn ? `rotate(${rnd(-1.6, 1.6).toFixed(2)}deg)` : '';
+    });
+    objs.classList.toggle('on', objsOn);
+  }
+  document.querySelectorAll('[data-o]').forEach(b => b.addEventListener('click', () => {
+    document.querySelector('[data-o].on')?.classList.remove('on');
+    b.classList.add('on'); objsOn = b.dataset.o === 'on'; rollObjs();
+  }));
+  document.getElementById('rollObjs').addEventListener('click', rollObjs);
+  rollObjs();
+})();
+</script>
+</body>
+</html>
