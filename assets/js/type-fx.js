@@ -40,15 +40,34 @@
     const text = el.dataset.word || el.textContent.trim();
     el.textContent = '';
     const rnd = (a, b) => a + Math.random() * (b - a);
+
+    // How far out of line the letters are thrown is rolled per page load:
+    // usually subtle, occasionally wild, so a wild one is a surprise rather
+    // than the house style. Force one with ?wm=subtle|loose|wild.
+    const TIERS = [
+      { name: 'subtle', weight: 60, rot: 3,  size: .06, drop: .04, flip: 0 },
+      { name: 'loose',  weight: 28, rot: 7,  size: .14, drop: .10, flip: 0 },
+      { name: 'wild',   weight: 12, rot: 14, size: .26, drop: .17, flip: .12 },
+    ];
+    const forced = (location.search + location.hash).match(/wm=(subtle|loose|wild)/);
+    let tier = TIERS[0];
+    if (forced) {
+      tier = TIERS.find(t => t.name === forced[1]);
+    } else {
+      let n = Math.random() * TIERS.reduce((a, t) => a + t.weight, 0);
+      for (const t of TIERS) { if ((n -= t.weight) <= 0) { tier = t; break; } }
+    }
+    el.dataset.tier = tier.name;
+
     const letters = [...text].map(ch => {
       const s = document.createElement('span');
       s.textContent = ch === ' ' ? ' ' : ch;
       if (ch !== ' ') {
-        // Knocked slightly out of line, re-rolled every page load. Applied
-        // before pinning below, so the reserved widths account for it.
-        s.style.transform = `rotate(${rnd(-3, 3).toFixed(2)}deg) `
-          + `translateY(${rnd(-0.04, 0.04).toFixed(3)}em)`;
-        s.style.fontSize = (1 + rnd(-0.06, 0.06)).toFixed(3) + 'em';
+        // Applied before pinning below, so the reserved widths account for it.
+        s.style.transform = `rotate(${rnd(-tier.rot, tier.rot).toFixed(2)}deg) `
+          + `translateY(${rnd(-tier.drop, tier.drop).toFixed(3)}em)`
+          + (Math.random() < tier.flip ? ' scaleY(-1)' : '');
+        s.style.fontSize = (1 + rnd(-tier.size, tier.size)).toFixed(3) + 'em';
       }
       el.appendChild(s);
       return s;
