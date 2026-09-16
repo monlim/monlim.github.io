@@ -10,6 +10,18 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Source+Code+Pro:wght@400;600&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1&family=Syne:wght@400..800&family=Instrument+Serif:ital@0;1&family=Anton&display=swap" rel="stylesheet">
 <style>
+  /* Redaction — Jeremy Mickel / MCKL, SIL Open Font License 1.1.
+     Commissioned for Titus Kaphar & Reginald Dwayne Betts' The Redaction, MoMA PS1.
+     Licence shipped at /assets/fonts/redaction/OFL.txt */
+  @font-face{font-family:"Redaction";src:url("/assets/fonts/redaction/Redaction-Regular.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"Redaction";src:url("/assets/fonts/redaction/Redaction-Bold.woff2") format("woff2");font-weight:700;font-display:swap}
+  @font-face{font-family:"Redaction 10";src:url("/assets/fonts/redaction/Redaction_10-Regular.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"Redaction 20";src:url("/assets/fonts/redaction/Redaction_20-Regular.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"Redaction 35";src:url("/assets/fonts/redaction/Redaction_35-Regular.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"Redaction 50";src:url("/assets/fonts/redaction/Redaction_50-Regular.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"Redaction 70";src:url("/assets/fonts/redaction/Redaction_70-Regular.woff2") format("woff2");font-display:swap}
+  @font-face{font-family:"Redaction 100";src:url("/assets/fonts/redaction/Redaction_100-Regular.woff2") format("woff2");font-display:swap}
+
   :root{
     --blue:#002AF5; --ink:#080808; --chip:#e5e2da; --yellow:#ffd900;
     --mono:"Courier Prime","Courier New",monospace;
@@ -29,48 +41,52 @@
 
   section{max-width:1100px;margin:0 auto;padding:62px 22px;border-bottom:1px solid #eee}
   h2{font-family:var(--code);font-size:13px;letter-spacing:.2em;color:var(--blue);margin-bottom:6px}
-  .lede{max-width:620px;margin-bottom:26px;color:#444}
-  .note{max-width:620px;margin-top:18px;font-size:13px;color:#666;font-style:italic}
+  .lede{max-width:640px;margin-bottom:26px;color:#444}
+  .note{max-width:640px;margin-top:18px;font-size:13px;color:#666;font-style:italic}
+  .ok{color:var(--blue);font-style:normal}
 
   .ctrls{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:26px}
   button{font-family:var(--code);font-size:12px;letter-spacing:.06em;border:1px solid var(--blue);
     background:#fff;color:var(--blue);padding:7px 13px;cursor:pointer}
   button.on{background:var(--blue);color:#fff}
 
-  /* ---------- 1. type ---------- */
+  /* ---------- 1 type ---------- */
   .specimen{border:1px solid #eee;padding:30px 26px}
   .spec-small .t{font-family:var(--display);font-size:27px;letter-spacing:.12em;color:var(--blue)}
-  .spec-big .t{font-family:var(--display);font-size:clamp(46px,9vw,124px);line-height:.95;
+  .spec-big .t{font-family:var(--display);font-size:clamp(42px,8.4vw,112px);line-height:.98;
     letter-spacing:-.01em;color:var(--blue);font-weight:600}
   .spec-label{font-family:var(--code);font-size:11px;letter-spacing:.14em;color:#999;margin-bottom:10px}
   .specimen + .specimen{margin-top:14px}
   .specimen p{max-width:640px;margin-top:14px}
 
-  /* ---------- 2. variable axis on hover ---------- */
-  .axis{font-family:"Fraunces",serif;font-size:clamp(40px,8vw,104px);line-height:1.05;color:var(--blue);
+  /* grade ladder */
+  .ladder{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:8px}
+  .ladder div{font-size:30px;color:var(--blue)}
+  .ladder span{display:block;font-family:var(--code);font-size:10px;letter-spacing:.14em;color:#aaa}
+
+  /* ---------- 2 movement (never wraps) ---------- */
+  .mv{white-space:nowrap;overflow:hidden}
+  .decay{font-family:"Redaction",serif;font-size:clamp(34px,6.4vw,84px);color:var(--blue);
+    cursor:default;display:inline-block}
+  .axis{font-family:"Fraunces",serif;font-size:clamp(30px,5.2vw,68px);color:var(--blue);
     font-variation-settings:"wght" 300,"SOFT" 0,"WONK" 0;cursor:default;display:inline-block;
     transition:font-variation-settings .45s cubic-bezier(.2,.8,.2,1)}
-  .axis:hover{font-variation-settings:"wght" 800,"SOFT" 100,"WONK" 1}
-  .axis2{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(40px,8vw,104px);color:var(--blue);
-    font-variation-settings:"wdth" 100,"wght" 300;display:inline-block;
-    transition:font-variation-settings .45s cubic-bezier(.2,.8,.2,1)}
-  .axis2:hover{font-variation-settings:"wdth" 75,"wght" 800}
+  .axis:hover{font-variation-settings:"wght" 700,"SOFT" 100,"WONK" 1}
 
-  /* ---------- 3. works hover flood ---------- */
+  /* ---------- 3 works flood ---------- */
   .flood{position:relative;overflow:hidden;background:#fff;padding:40px 30px;border:1px solid #eee}
   .flood-bg{position:absolute;inset:0;background-size:cover;background-position:center;
     opacity:0;transition:opacity .4s ease;filter:saturate(1.1)}
-  /* scrim keeps the titles readable whatever the image underneath */
   .flood-bg::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.34)}
   .flood.lit .flood-bg{opacity:1}
-  .flood.lit .flood-list a{color:#fff;mix-blend-mode:normal}
+  .flood.lit .flood-list a{color:#fff}
   .flood-list{position:relative;z-index:2}
   .flood-list a{display:block;font-family:var(--display);font-size:clamp(26px,5vw,58px);
     line-height:1.12;text-decoration:none;color:var(--blue);transition:color .3s,transform .3s;
     width:max-content;max-width:100%}
   .flood-list a:hover{transform:translateX(16px)}
 
-  /* ---------- 4. banner rhythm ---------- */
+  /* ---------- 4 rhythm ---------- */
   .strip{display:flex;flex-direction:column;gap:4px}
   .strip .b{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
   .strip .b img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
@@ -82,17 +98,26 @@
   .varied .b:nth-child(3){height:150px;margin-right:24%}
   .varied .b:nth-child(4){height:118px;margin-left:8%;margin-right:8%}
 
-  /* ---------- 5. typing ---------- */
-  .typed{max-width:640px;min-height:7.6em;white-space:pre-wrap}
-  .caret{display:inline-block;width:.55em;height:1.05em;background:var(--blue);
-    vertical-align:-.18em;animation:blink .9s steps(1) infinite}
-  @keyframes blink{50%{opacity:0}}
-
-  /* ---------- 6. click burst ---------- */
+  /* ---------- 5 burst ---------- */
   .burst{position:relative;height:230px;border:1px solid #eee;overflow:hidden;cursor:crosshair;
     display:flex;align-items:center;justify-content:center}
   .burst .hint{font-family:var(--code);font-size:12px;letter-spacing:.12em;color:#aaa}
   #burstCanvas{position:absolute;inset:0}
+
+  /* ---------- 6 header ---------- */
+  .hdr-stage{border:1px solid #eee;padding:40px 30px;min-height:150px;display:flex;align-items:center}
+  .wordmark{display:inline-flex;align-items:flex-end;height:46px}
+  .wordmark .sl{display:block;height:46px;background-image:url("/assets/img/logo.png");
+    background-repeat:no-repeat;background-size:auto 46px}
+  .wordmark.bounce .sl{animation:slbounce 1.9s ease-in-out infinite}
+  @keyframes slbounce{0%,72%,100%{transform:translateY(0) rotate(0)}
+    78%{transform:translateY(-9px) rotate(-3deg)}88%{transform:translateY(2px) rotate(1.5deg)}}
+  .wordmark.wave:hover .sl{animation:slwave .85s ease-in-out}
+  @keyframes slwave{0%,100%{transform:translateY(0)}45%{transform:translateY(-12px)}}
+
+  .wm-text{font-family:"Redaction",serif;font-size:42px;color:var(--blue);letter-spacing:.01em;
+    white-space:nowrap;cursor:default}
+  .wm-text span{display:inline-block}
 
   @media (max-width:700px){ section{padding:44px 18px} }
 </style>
@@ -101,18 +126,19 @@
 
 <div class="topbar">
   <strong>PLAYFUL DIRECTIONS</strong>
-  <a href="#type">1 Type</a><a href="#axis">2 Living type</a><a href="#works">3 Works page</a>
-  <a href="#rhythm">4 Banner rhythm</a><a href="#typing">5 Typing</a><a href="#burst">6 Click burst</a>
+  <a href="#type">1 Type</a><a href="#move">2 Movement</a><a href="#header">3 Header</a>
+  <a href="#works">4 Works page</a><a href="#rhythm">5 Rhythm</a><a href="#burst">6 Click burst</a>
   <a href="/" style="border:0;color:#999">← site</a>
 </div>
 
 <!-- 1 -->
 <section id="type">
   <h2>1 · TYPEFACE + SCALE</h2>
-  <p class="lede">The same work title in each candidate face, first at today's size, then at the
-  scale I'd argue for. Courier Prime stays as the body voice in every case — only titles change.</p>
+  <p class="lede">Redaction is now here and self-hosted — it's under the Open Font License, so it's
+  free to use commercially. Same work title in each face, at today's size then at scale.</p>
   <div class="ctrls" id="fontBtns">
-    <button data-f='"Source Code Pro","Courier New",monospace' class="on">Current (Source Code Pro)</button>
+    <button data-f='"Redaction",serif' class="on">Redaction</button>
+    <button data-f='"Source Code Pro","Courier New",monospace'>Current (Source Code Pro)</button>
     <button data-f='"Bricolage Grotesque",sans-serif'>Bricolage Grotesque</button>
     <button data-f='"Fraunces",serif'>Fraunces</button>
     <button data-f='"Syne",sans-serif'>Syne</button>
@@ -131,28 +157,57 @@
     <p>An opera for the unmourned dead, staged as a funeral rite. Composition and sound design
     by Monica Lim and Mindy Meng Wang.</p>
   </div>
-  <p class="note">Redaction — the typeface built in six grades of halftone decay — isn't on Google
-  Fonts, so it isn't switchable here. It would need self-hosting, which is easy; I left it out so
-  nothing in this demo is hypothetical.</p>
+  <div style="margin-top:30px">
+    <div class="spec-label">THE SEVEN GRADES OF DECAY</div>
+    <div class="ladder">
+      <div style="font-family:'Redaction'">Jagad<span>REDACTION</span></div>
+      <div style="font-family:'Redaction 10'">Jagad<span>10</span></div>
+      <div style="font-family:'Redaction 20'">Jagad<span>20</span></div>
+      <div style="font-family:'Redaction 35'">Jagad<span>35</span></div>
+      <div style="font-family:'Redaction 50'">Jagad<span>50</span></div>
+      <div style="font-family:'Redaction 70'">Jagad<span>70</span></div>
+      <div style="font-family:'Redaction 100'">Jagad<span>100</span></div>
+    </div>
+  </div>
 </section>
 
 <!-- 2 -->
-<section id="axis">
-  <h2>2 · TYPE THAT MOVES</h2>
-  <p class="lede">Variable fonts hold their shape on continuous dials rather than fixed weights,
-  so a title can be swept like a filter. Hover each line.</p>
-  <div class="axis">Extended Piano Studies</div>
-  <div style="height:18px"></div>
-  <div class="axis2">Chanting Machine</div>
-  <p class="note">Fraunces above (weight, softness and its "wonk" axis at once), Bricolage below
-  (narrowing as it thickens). Same idea, different personality.</p>
+<section id="move">
+  <h2>2 · MOVEMENT THAT NEVER RE-WRAPS</h2>
+  <p class="lede">Both of these are pinned to one line, so nothing can ever jump to a new row.
+  Hover each.</p>
+
+  <div class="spec-label">A — REDACTION DECAYING (width is identical in every grade)</div>
+  <div class="mv"><span class="decay" id="decay1">Extended Piano Studies</span></div>
+  <div style="height:26px"></div>
+
+  <div class="spec-label">B — VARIABLE AXIS, HELD ON ONE LINE</div>
+  <div class="mv"><span class="axis">Chanting Machine</span></div>
+
+  <p class="note" id="metrics">measuring…</p>
 </section>
 
 <!-- 3 -->
+<section id="header">
+  <h2>3 · THE HEADER WORDMARK</h2>
+  <p class="lede">Four directions. The first two keep your hand-drawn lettering and simply give it
+  joints; the last two replace it with live Redaction type.</p>
+  <div class="ctrls" id="hdrBtns">
+    <button data-h="bounce" class="on">1 Handwriting, bouncing</button>
+    <button data-h="wave">2 Handwriting, wave on hover</button>
+    <button data-h="decay">3 Redaction, decaying letters</button>
+    <button data-h="scramble">4 Redaction, scramble on hover</button>
+  </div>
+  <div class="hdr-stage" id="hdrStage"></div>
+  <p class="note">Options 1 and 2 slice your existing logo at the natural gaps in the handwriting
+  and move the pieces independently — the drawing is untouched, it just gains joints. Hover the
+  wordmark in every option.</p>
+</section>
+
+<!-- 4 -->
 <section id="works">
-  <h2>3 · THE WORKS PAGE</h2>
-  <p class="lede">Today this page is seven plain links. Here, hovering a category floods the page
-  with that work — your own images, doing the talking.</p>
+  <h2>4 · THE WORKS PAGE <span class="ok">— approved, going live</span></h2>
+  <p class="lede">Hovering a category floods the page with that work.</p>
   <div class="flood" id="flood">
     <div class="flood-bg" id="floodBg"></div>
     <nav class="flood-list" id="floodList">
@@ -167,16 +222,14 @@
   </div>
 </section>
 
-<!-- 4 -->
+<!-- 5 -->
 <section id="rhythm">
-  <h2>4 · BANNER RHYTHM</h2>
-  <p class="lede">Category pages currently stack identical strips. Below: the metronome, then the
-  same works given varied heights and indents.</p>
+  <h2>5 · BANNER RHYTHM <span class="ok">— approved, going live</span></h2>
   <div class="ctrls" id="rhythmBtns">
-    <button data-r="uniform" class="on">Uniform (today)</button>
-    <button data-r="varied">Varied</button>
+    <button data-r="uniform">Uniform (today)</button>
+    <button data-r="varied" class="on">Varied</button>
   </div>
-  <div class="strip uniform" id="strip">
+  <div class="strip varied" id="strip">
     <a class="b" href="#"><img src="/assets/img/204248_cd2104937dab4bae9eb2a28e340569e7~mv2.jpg" alt=""><span>OPERA FOR THE DEAD</span></a>
     <a class="b" href="#"><img src="/assets/img/204248_e200ba97c0d94657a89dc0de205ec2ea~mv2.jpg" alt=""><span>GUAI</span></a>
     <a class="b" href="#"><img src="/assets/img/204248_34deba6932d74e6fb4982462a65ed5d6~mv2.jpg" alt=""><span>SCRAPE ELEGY</span></a>
@@ -184,48 +237,162 @@
   </div>
 </section>
 
-<!-- 5 -->
-<section id="typing">
-  <h2>5 · TEXT THAT TYPES ITSELF</h2>
-  <p class="lede">Suited to a typewriter face. Best reserved for one or two pages — charming once,
-  irritating on every visit.</p>
-  <div class="ctrls"><button id="replayType">↻ replay</button></div>
-  <div class="typed" id="typed"></div>
-</section>
-
 <!-- 6 -->
-<section id="burst">
-  <h2>6 · CLICK BURST</h2>
-  <p class="lede">Your cursor effects follow movement but ignore clicks. Click anywhere in the box.</p>
+<section id="burst" style="border:0">
+  <h2>6 · CLICK BURST <span class="ok">— approved, going live</span></h2>
+  <p class="lede">Click anywhere in the box.</p>
   <div class="burst" id="burstBox">
     <canvas id="burstCanvas"></canvas>
     <span class="hint">CLICK</span>
   </div>
 </section>
 
-<section style="border:0">
-  <h2>NOT SHOWN HERE</h2>
-  <p class="lede">Two ideas that can't be faked in a demo. <strong>Audio-reactive mode</strong> — a
-  sound toggle playing one of your tracks, with the hero pulse and cursor effects following the
-  real audio instead of a fixed tempo — needs the actual audio file and your say-so about which
-  track. <strong>Glitch page transitions</strong> only make sense moving between real pages, so
-  they'd have to be built into the site itself to be judged.</p>
-</section>
-
 <script>
 (() => {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const GRADES = ['Redaction','Redaction 10','Redaction 20','Redaction 35',
+                  'Redaction 50','Redaction 70','Redaction 100'];
 
   // 1 — font switcher
   const fontBtns = document.getElementById('fontBtns');
   fontBtns.addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
-    fontBtns.querySelector('.on')?.classList.remove('on');
-    b.classList.add('on');
+    fontBtns.querySelector('.on')?.classList.remove('on'); b.classList.add('on');
     document.documentElement.style.setProperty('--display', b.dataset.f);
   });
+  document.documentElement.style.setProperty('--display', '"Redaction",serif');
 
-  // 3 — hover flood
+  // 2A — decay on hover, stepping through grades
+  function attachDecay(el, {loop = false} = {}) {
+    let t = null, i = 0;
+    const set = n => el.style.fontFamily = `"${GRADES[n]}",serif`;
+    const run = (dir) => {
+      clearInterval(t);
+      t = setInterval(() => {
+        i += dir;
+        if (i <= 0) { i = 0; clearInterval(t); }
+        if (i >= GRADES.length - 1) { i = GRADES.length - 1; clearInterval(t); }
+        set(i);
+      }, 70);
+    };
+    el.addEventListener('pointerenter', () => !reduced && run(1));
+    el.addEventListener('pointerleave', () => !reduced && run(-1));
+    return {set};
+  }
+  attachDecay(document.getElementById('decay1'));
+
+  // The grades are NOT metrically identical — they differ by a few px. Pin every
+  // decaying box to its widest grade so the text cannot shift at all.
+  async function lockToWidestGrade(el) {
+    await document.fonts.ready;
+    const cs = getComputedStyle(el);
+    const probe = document.createElement('span');
+    probe.style.cssText = `position:absolute;visibility:hidden;white-space:nowrap;
+      font-size:${cs.fontSize};letter-spacing:${cs.letterSpacing}`;
+    probe.textContent = el.textContent;
+    document.body.appendChild(probe);
+    const widths = [];
+    for (const g of GRADES) {
+      await document.fonts.load(`${cs.fontSize} "${g}"`);
+      probe.style.fontFamily = `"${g}",serif`;
+      widths.push(probe.getBoundingClientRect().width);
+    }
+    probe.remove();
+    const max = Math.max(...widths);
+    el.style.display = 'inline-block';
+    el.style.width = Math.ceil(max) + 'px';
+    return widths.map(w => Math.round(w));
+  }
+
+  (async () => {
+    const widths = await lockToWidestGrade(document.getElementById('decay1'));
+    const spread = Math.max(...widths) - Math.min(...widths);
+    document.getElementById('metrics').innerHTML =
+      `The grades aren't quite identical in width — they vary by ${spread}px across the seven. `
+      + `So each decaying line is pinned to its widest grade and held on one line: it can never `
+      + `re-wrap, and the letters don't shift either.`;
+  })();
+
+  // 3 — header options
+  const stage = document.getElementById('hdrStage'), hdrBtns = document.getElementById('hdrBtns');
+  const LOGO_W = 2000;                       // natural logo width
+  const CUTS = [0, 365, 884, 1370, 1569, 1675, LOGO_W];  // gaps found in the artwork
+  const H = 46, DISPLAY_W = 322;             // rendered height / total width
+
+  function sliced(cls) {
+    const wrap = document.createElement('span');
+    wrap.className = 'wordmark ' + cls;
+    const scale = DISPLAY_W / LOGO_W;
+    for (let i = 0; i < CUTS.length - 1; i++) {
+      const x0 = CUTS[i], w = (CUTS[i+1] - CUTS[i]) * scale;
+      const s = document.createElement('span');
+      s.className = 'sl';
+      s.style.width = w + 'px';
+      s.style.backgroundSize = DISPLAY_W + 'px auto';
+      s.style.backgroundPosition = (-x0 * scale) + 'px 0';
+      s.style.animationDelay = (i * 0.085) + 's';
+      wrap.appendChild(s);
+    }
+    return wrap;
+  }
+
+  function liveText(mode) {
+    const el = document.createElement('span');
+    el.className = 'wm-text';
+    const word = 'Monica Lim';
+    [...word].forEach(ch => {
+      const s = document.createElement('span');
+      s.textContent = ch === ' ' ? ' ' : ch;
+      el.appendChild(s);
+    });
+    const letters = [...el.children];
+
+    if (mode === 'decay') {
+      // lock each letter to its widest grade first, so nothing shuffles sideways
+      requestAnimationFrame(async () => {
+        for (const s of letters) await lockToWidestGrade(s);
+        if (reduced) return;
+        letters.forEach((s, i) => {
+          let g = Math.floor(Math.random() * GRADES.length);
+          setInterval(() => {
+            g = (g + 1) % GRADES.length;
+            s.style.fontFamily = `"${GRADES[g]}",serif`;
+          }, 900 + i * 130);
+        });
+      });
+      el.addEventListener('pointerenter', () => letters.forEach(s =>
+        s.style.fontFamily = `"${GRADES[GRADES.length-1]}",serif`));
+    }
+
+    if (mode === 'scramble') {
+      const CHARS = '█▓▒░#@%&*/\\<>_';
+      el.addEventListener('pointerenter', () => {
+        if (reduced) return;
+        letters.forEach((s, i) => {
+          const orig = s.textContent;
+          let n = 0;
+          const iv = setInterval(() => {
+            s.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+            if (++n > 3 + i) { clearInterval(iv); s.textContent = orig; }
+          }, 45);
+        });
+      });
+    }
+    return el;
+  }
+
+  function showHeader(mode) {
+    stage.innerHTML = '';
+    stage.appendChild(mode === 'bounce' || mode === 'wave' ? sliced(mode) : liveText(mode));
+  }
+  hdrBtns.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    hdrBtns.querySelector('.on')?.classList.remove('on'); b.classList.add('on');
+    showHeader(b.dataset.h);
+  });
+  showHeader('bounce');
+
+  // 4 — flood
   const flood = document.getElementById('flood'), bg = document.getElementById('floodBg');
   document.getElementById('floodList').addEventListener('pointerover', e => {
     const a = e.target.closest('a[data-img]'); if (!a) return;
@@ -234,7 +401,7 @@
   });
   flood.addEventListener('pointerleave', () => flood.classList.remove('lit'));
 
-  // 4 — rhythm toggle
+  // 5 — rhythm
   const strip = document.getElementById('strip'), rb = document.getElementById('rhythmBtns');
   rb.addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
@@ -242,30 +409,7 @@
     strip.className = 'strip ' + b.dataset.r;
   });
 
-  // 5 — typing
-  const TEXT = "Hello! I am a composer, sound and new media artist. I work with installations, "
-    + "performance art, contemporary dance, screen, objects, code, bodies, insects, food and "
-    + "everything in between (yes, I am easily bored).";
-  const typed = document.getElementById('typed');
-  let typeTimer = null;
-  function runType() {
-    clearInterval(typeTimer);
-    if (reduced) { typed.textContent = TEXT; return; }
-    let i = 0;
-    typed.innerHTML = '<span class="caret"></span>';
-    typeTimer = setInterval(() => {
-      i++;
-      typed.innerHTML = TEXT.slice(0, i).replace(/&/g,'&amp;').replace(/</g,'&lt;')
-                        + '<span class="caret"></span>';
-      if (i >= TEXT.length) clearInterval(typeTimer);
-    }, 18);
-  }
-  document.getElementById('replayType').addEventListener('click', runType);
-  new IntersectionObserver((es, o) => {
-    es.forEach(en => { if (en.isIntersecting) { runType(); o.disconnect(); } });
-  }, {threshold:.4}).observe(typed);
-
-  // 6 — click burst
+  // 6 — burst
   const box = document.getElementById('burstBox');
   const cv = document.getElementById('burstCanvas'), cx = cv.getContext('2d');
   const DPR = Math.min(devicePixelRatio || 1, 2);

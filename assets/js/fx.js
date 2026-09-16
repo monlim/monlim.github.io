@@ -148,6 +148,29 @@
     ctx.fillRect(last.x - 3, last.y - 3, 6, 6);
   }
 
+  // ---------- click burst (runs on top of whichever mode is active) ----------
+  const sparks = [];
+  addEventListener('pointerdown', e => {
+    // ignore clicks on things the visitor is actually operating
+    if (e.target.closest('a, button, input, textarea, select, iframe, video, label')) return;
+    for (let i = 0; i < 26; i++) {
+      const a = (Math.PI * 2 * i) / 26 + Math.random() * .25;
+      const sp = 1.6 + Math.random() * 3.6;
+      sparks.push({ x: e.clientX, y: e.clientY, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 1 });
+    }
+  }, { passive: true });
+
+  function drawSparks(dt) {
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      const s = sparks[i];
+      s.x += s.vx; s.y += s.vy; s.vx *= .97; s.vy *= .97;
+      s.life -= dt * 1.1;
+      if (s.life <= 0) { sparks.splice(i, 1); continue; }
+      ctx.fillStyle = `rgba(0,42,245,${s.life})`;
+      ctx.beginPath(); ctx.arc(s.x, s.y, 2.3, 0, 7); ctx.fill();
+    }
+  }
+
   // ---------- pick one per page view ----------
   const fns = { landmarks, data, warp, wave };
   const names = Object.keys(fns);
@@ -160,6 +183,7 @@
     last = now;
     ctx.clearRect(0, 0, W, H);
     fns[mode](dt);
+    drawSparks(dt);
     ptr.moved = false;
     requestAnimationFrame(frame);
   }

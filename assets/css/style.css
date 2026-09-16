@@ -123,7 +123,23 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
   letter-spacing: 0.06em;
   margin: 0 0 38px;
   color: var(--blue);
+  width: max-content;
+  max-width: 100%;
+  transition: color .3s, transform .3s;
 }
+/* Hovering a category floods the panel with that work. */
+.works-flood { position: relative; overflow: hidden; padding: 46px 30px 12px; }
+.works-flood-bg {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  opacity: 0; transition: opacity .4s ease;
+}
+/* scrim keeps the titles readable over light images */
+.works-flood-bg::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.34); }
+.works-flood.lit .works-flood-bg { opacity: 1; }
+.works-flood .works-list { position: relative; z-index: 2; }
+.works-flood.lit .works-list a { color: #fff; }
+.works-flood .works-list a:hover { transform: translateX(16px); }
 
 /* ---------- category pages: stacked banners ---------- */
 .banner-list { display: flex; flex-direction: column; gap: 4px; }
@@ -134,6 +150,12 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
   overflow: hidden;
   text-decoration: none;
 }
+/* Syncopate the stack: heights and indents cycle every four banners so a long
+   category never settles into a metronome. */
+.banner-list .banner:nth-child(4n+1) { height: 310px; }
+.banner-list .banner:nth-child(4n+2) { height: 208px; margin-left: 14%; }
+.banner-list .banner:nth-child(4n+3) { height: 262px; margin-right: 19%; }
+.banner-list .banner:nth-child(4n+4) { height: 226px; margin-left: 7%; margin-right: 7%; }
 .banner img {
   width: 100%; height: 100%;
   object-fit: cover;
@@ -339,7 +361,11 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
   .work-head { flex-direction: column-reverse; }
   .work-head .title { text-align: left; white-space: normal; }
   .press .about { flex-direction: column; }
-  .banner { height: 200px; }
+  /* on a phone the indents would leave slivers, so keep only the height variation */
+  .banner-list .banner:nth-child(4n+1) { height: 214px; margin: 0; }
+  .banner-list .banner:nth-child(4n+2) { height: 168px; margin: 0; }
+  .banner-list .banner:nth-child(4n+3) { height: 196px; margin: 0; }
+  .banner-list .banner:nth-child(4n+4) { height: 176px; margin: 0; }
   .works-list a { font-size: 24px; }
   .contact-inner .email-block, .contact-inner .loop-block { margin-left: 0; }
 }
