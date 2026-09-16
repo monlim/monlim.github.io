@@ -76,6 +76,7 @@ img { max-width: 100%; height: auto; display: block; }
 
 .nav { display: flex; align-items: center; flex-wrap: wrap; gap: 2px; }
 .nav a {
+  position: relative;          /* anchors the drawn circle on the active item */
   font-family: var(--mono);
   font-size: 15px;
   letter-spacing: 0.18em;
@@ -170,7 +171,9 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 .works-flood .works-list a:hover { transform: translateX(16px); }
 
 /* ---------- category pages: stacked banners ---------- */
-.banner-list { display: flex; flex-direction: column; gap: 4px; }
+/* Rotated banners need room between them, and clipping so a tilted corner
+   can never push a horizontal scrollbar onto the page. */
+.banner-list { display: flex; flex-direction: column; gap: 18px; overflow-x: clip; }
 .banner {
   position: relative;
   display: block;
@@ -303,7 +306,7 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 /* Body text now uses the site's typewriter face rather than the Wix-era
    Helvetica; the quote is the one place left in a contrasting voice. */
 .press { font-family: var(--mono); font-size: 14px; color: #333; }
-.press h2 { font-family: var(--display); font-weight: 400; font-size: 32px; margin: 40px 0 18px; color: var(--blue); }
+.press h2 { position: relative; font-family: var(--display); font-weight: 400; font-size: 32px; margin: 40px 0 18px; color: var(--blue); }
 .press .about { display: flex; gap: 34px; align-items: flex-start; }
 .press .about img { width: 250px; }
 .press .cols { display: flex; gap: 60px; flex-wrap: wrap; }
@@ -399,6 +402,7 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
   .work-head .title { text-align: left; white-space: normal; }
   .press .about { flex-direction: column; }
   /* on a phone the indents would leave slivers, so keep only the height variation */
+  .banner-list { gap: 4px; }
   .banner-list .banner:nth-child(4n+1) { height: 214px; margin: 0; }
   .banner-list .banner:nth-child(4n+2) { height: 168px; margin: 0; }
   .banner-list .banner:nth-child(4n+3) { height: 196px; margin: 0; }

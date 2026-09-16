@@ -39,9 +39,17 @@
     if (!el) return;
     const text = el.dataset.word || el.textContent.trim();
     el.textContent = '';
+    const rnd = (a, b) => a + Math.random() * (b - a);
     const letters = [...text].map(ch => {
       const s = document.createElement('span');
       s.textContent = ch === ' ' ? ' ' : ch;
+      if (ch !== ' ') {
+        // Knocked slightly out of line, re-rolled every page load. Applied
+        // before pinning below, so the reserved widths account for it.
+        s.style.transform = `rotate(${rnd(-3, 3).toFixed(2)}deg) `
+          + `translateY(${rnd(-0.04, 0.04).toFixed(3)}em)`;
+        s.style.fontSize = (1 + rnd(-0.06, 0.06)).toFixed(3) + 'em';
+      }
       el.appendChild(s);
       return s;
     });
