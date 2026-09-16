@@ -1,16 +1,28 @@
 /* Handmade layer.
-   1. Category banners are knocked fractionally out of line, re-rolled on every
-      page load, so the stack is never laid out twice the same way.
+   1. The menu and the category banners are knocked out of line, re-rolled on
+      every page load, so neither is laid out twice the same way.
    2. Interface marks — the active nav item, the buttons — are drawn as
       wobbling strokes rather than boxes and rules. Each stroke is generated
       fresh and drawn twice, the way a pen goes round a word a second time.
-   Desktop only for the banners: a rotated full-bleed block would overhang the
-   viewport, and the phone layout has no room for indents. */
+   Both (1) are desktop only: a rotated full-bleed banner would overhang the
+   viewport, and on a phone the menu already wraps onto four rows with no room
+   to spare. */
 (() => {
   const rnd = (a, b) => a + Math.random() * (b - a);
   const wide = () => matchMedia('(min-width: 801px)').matches;
 
-  // ---------- 1. banners out of line ----------
+  // ---------- 1a. the menu out of line ----------
+  // Top-level items only: WORKS is wrapped in .has-menu, which carries its
+  // dropdown along with it.
+  const navItems = document.querySelectorAll('.nav > a, .nav > .has-menu');
+  if (navItems.length && wide()) {
+    navItems.forEach(el => {
+      el.style.transform = `translateY(${rnd(-14, 14).toFixed(1)}px)`;
+      el.style.marginLeft = Math.round(rnd(0, 18)) + 'px';
+    });
+  }
+
+  // ---------- 1b. banners out of line ----------
   const banners = document.querySelectorAll('.banner-list .banner');
   if (banners.length && wide()) {
     banners.forEach(b => {
