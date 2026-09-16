@@ -59,10 +59,17 @@
     letters.forEach((s, i) => {
       if (s.textContent === ' ') return;
       let g = Math.floor(Math.random() * GRADES.length);
-      setInterval(() => {
+      const step = () => {
         g = (g + 1) % GRADES.length;
         s.style.fontFamily = face(GRADES[g]);
-      }, 1500 + i * 220 + Math.random() * 400);
+      };
+      // Show movement quickly, then settle into the slower staggered rhythm.
+      // Waiting the full interval for the first change meant several seconds of
+      // apparent stillness on a phone, where measuring the letters takes longer.
+      setTimeout(() => {
+        step();
+        setInterval(step, 1500 + i * 220 + Math.random() * 400);
+      }, 200 + i * 110 + Math.random() * 250);
     });
   }
 
