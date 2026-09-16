@@ -349,11 +349,12 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 .photo-band .strip img { width: 100%; height: 230px; object-fit: cover; }
 .photo-band .btn-wrap { text-align: center; }
 .photo-band .btn {
-  display: inline-block; font-family: var(--mono);
-  color: #fff; border: 2px solid #fff; border-radius: 20px;
-  padding: 7px 22px; text-decoration: none;
+  display: inline-block; font-family: var(--display); font-size: 21px;
+  color: #fff; border: 0; border-radius: 0;
+  padding: 8px 24px; text-decoration: none;
 }
-.photo-band .btn:hover { background: #fff; color: #000; }
+/* the drawn box redraws itself on hover instead of inverting */
+.photo-band .btn:hover { background: none; color: #fff; }
 
 /* ---------- contact ---------- */
 .contact-page {
@@ -379,13 +380,16 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
   background: #fff;
   flex: 1 1 200px;
 }
+/* Boxed in by hand rather than a solid black block — handmade.js draws the
+   stroke and re-scribbles it on hover. */
 .contact-form button {
-  font-family: var(--mono);
-  font-size: 14px;
-  background: #000;
-  color: var(--yellow);
+  font-family: var(--display);
+  font-size: 22px;
+  line-height: 1.1;
+  background: none;
+  color: var(--blue);
   border: 0;
-  padding: 10px 26px;
+  padding: 8px 24px;
   cursor: pointer;
 }
 .contact-form button:hover { background: var(--blue); }

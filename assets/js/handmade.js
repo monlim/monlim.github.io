@@ -60,6 +60,36 @@
     parent.appendChild(p);
   }
 
+  // A boxed-in label: each edge wobbles and overshoots at the corners, the way
+  // a pen does when you box something in by hand.
+  function roughRect(w, h, inset, wobble) {
+    const x0 = inset, y0 = inset, x1 = w - inset, y1 = h - inset, over = 3.5;
+    const edge = (ax, ay, bx, by) => {
+      const pts = [];
+      for (let i = 0; i <= 4; i++) pts.push([ax + (bx - ax) * i / 4, ay + (by - ay) * i / 4]);
+      return roughPath(pts, wobble);
+    };
+    return [edge(x0 - over, y0, x1 + over, y0), edge(x1, y0 - over, x1, y1 + over),
+            edge(x1 + over, y1, x0 - over, y1), edge(x0, y1 + over, x0, y0 - over)].join(' ');
+  }
+
+  function drawnBox(el) {
+    el.querySelectorAll('svg[data-mark]').forEach(s => s.remove());
+    const r = el.getBoundingClientRect();
+    if (!r.width) return;
+    anchor(el);
+    const pad = 7;
+    const w = Math.round(r.width) + pad * 2, h = Math.round(r.height) + pad * 2;
+    const s = makeSvg(w, h, `position:absolute;left:${-pad}px;top:${-pad}px;width:${w}px;height:${h}px`);
+    stroke(s, roughRect(w, h, 3, 1.5), 1.6);
+    stroke(s, roughRect(w, h, 5.5, 2.1), 1.0);
+    el.appendChild(s);
+    if (!el.dataset.boxBound) {            // re-scribble when pointed at
+      el.dataset.boxBound = '1';
+      el.addEventListener('pointerenter', () => drawnBox(el));
+    }
+  }
+
   function circleNav(el) {
     const r = el.getBoundingClientRect();
     if (!r.width) return;
@@ -99,6 +129,7 @@
     const active = document.querySelector('.nav a.active');
     if (active) circleNav(active);
     document.querySelectorAll('.press h2').forEach(underline);
+    document.querySelectorAll('.contact-form button, .photo-band .btn').forEach(drawnBox);
   }
 
   // Metrics change once the webfonts land and whenever the window resizes.
