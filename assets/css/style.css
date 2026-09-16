@@ -95,6 +95,21 @@ main.full-bleed { max-width: none; padding: 40px 0 30px; }
 .hero-fig img { width: auto; max-width: 100%; max-height: 74vh; }
 .hero-fig figcaption { font-size: 12px; margin-top: 8px; }
 
+/* Hero breathes on a 75bpm two-beat pattern: sharp attack, slow decay, like a
+   kick drum, with a softer off-beat. Transform only, so nothing reflows. */
+@keyframes hero-beat {
+  0%   { transform: scale(1); }
+  5%   { transform: scale(1.018); }
+  22%  { transform: scale(1.003); }
+  50%  { transform: scale(1); }
+  55%  { transform: scale(1.009); }
+  72%  { transform: scale(1.001); }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-fig img { animation: hero-beat 1.6s ease-out infinite; transform-origin: center center; }
+}
+
 /* ---------- bio ---------- */
 .bio-wrap { max-width: 750px; margin: 0 auto; }
 .bio-wrap .caption { font-size: 12px; margin: 8px 0 30px; }
