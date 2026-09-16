@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Menu directions | Monica Lim</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<style>
+  .topbar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.95);
+    backdrop-filter:blur(6px);border-bottom:1px solid #eee;padding:10px 18px;
+    display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .topbar strong{font-family:var(--code);letter-spacing:.12em;font-size:13px;color:var(--blue);margin-right:4px}
+  button{font-family:var(--code);font-size:12px;letter-spacing:.06em;border:1px solid var(--blue);
+    background:#fff;color:var(--blue);padding:7px 12px;cursor:pointer}
+  button.on{background:var(--blue);color:#fff}
+  button.alt{border-color:#999;color:#555}
+
+  section{max-width:1180px;margin:0 auto;padding:34px 22px 60px}
+  .lede{max-width:660px;margin-bottom:20px;color:#444}
+  h2{font-family:var(--code);font-size:13px;letter-spacing:.2em;color:var(--blue);margin-bottom:6px}
+  .note{max-width:660px;margin-top:20px;font-size:13px;color:#666;font-style:italic}
+
+  /* the stage mimics a real page top */
+  .stage{border:1px solid #eee;background:#fff;margin:0 auto;transition:max-width .25s}
+  .stage.phone{max-width:375px}
+  .stage-inner{padding:20px 20px 30px}
+  .fakebody{margin-top:26px;color:#bbb;font-size:13px;line-height:1.6}
+  .fakebody div{height:9px;background:#f0f0f0;margin-bottom:9px;border-radius:2px}
+  .fakebody div:nth-child(2){width:86%} .fakebody div:nth-child(3){width:64%}
+
+  .hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap}
+  .wm{font-family:var(--display);font-size:30px;color:var(--blue);white-space:nowrap}
+  .menu{display:flex;flex-wrap:wrap;gap:2px;align-items:center}
+  .menu a{position:relative;text-decoration:none;color:var(--blue);white-space:nowrap;
+    font-family:var(--mono);font-size:14px;letter-spacing:.18em;padding:5px 11px}
+  .menu a.active{background:var(--chip)}
+
+  /* index */
+  .m-index .menu{gap:2px 20px}
+  .m-index .menu a{font-family:var(--display);font-size:22px;letter-spacing:.02em;padding:4px 2px;background:none}
+  .m-index .menu a .n{font-family:var(--code);font-size:10px;letter-spacing:.1em;color:#9aa;
+    vertical-align:super;margin-right:5px}
+
+  /* stamped */
+  .m-stamp .menu a{background:none;transition:transform .18s}
+
+  /* scatter */
+  .m-scatter .menu{align-items:flex-start}
+  .m-scatter .menu a{background:none}
+
+  /* magnetic */
+  .m-magnet .menu a{background:none;transition:transform .35s cubic-bezier(.2,.8,.2,1),letter-spacing .35s}
+
+  /* vertical */
+  .m-vertical .hdr{flex-wrap:nowrap}
+  .m-vertical .menu{flex-direction:column;align-items:flex-start;gap:4px}
+  .m-vertical .menu a{background:none;font-size:15px}
+
+  /* collapsed */
+  .m-collapsed .menu{display:none;position:absolute;top:100%;right:0;background:#fff;
+    border:1px solid var(--blue);flex-direction:column;align-items:stretch;padding:6px 0;min-width:210px;z-index:20}
+  .m-collapsed .menu.open{display:flex}
+  .m-collapsed .menu a{background:none;padding:9px 16px}
+  .trigger{position:relative;background:none;border:0;cursor:pointer;width:46px;height:46px;padding:0}
+  .menuwrap{position:relative}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <strong>MENU DIRECTIONS</strong>
+  <button data-m="today" class="on">Today</button>
+  <button data-m="index">1 Numbered index</button>
+  <button data-m="stamp">2 Stamped</button>
+  <button data-m="scatter">3 Scattered</button>
+  <button data-m="magnet">4 Magnetic</button>
+  <button data-m="vertical">5 Vertical</button>
+  <button data-m="collapsed">6 Collapsed</button>
+  <button class="alt" id="roll">↻ re-roll</button>
+  <button class="alt" id="size">width: desktop</button>
+  <a href="/" style="font-family:var(--code);font-size:12px;color:#999;text-decoration:none;padding:4px 8px">← site</a>
+</div>
+
+<section>
+  <h2 id="label">TODAY</h2>
+  <p class="lede" id="desc"></p>
+  <div class="stage" id="stage"><div class="stage-inner">
+    <div class="hdr" id="hdr"></div>
+    <div class="fakebody"><div></div><div></div><div></div></div>
+  </div></div>
+  <p class="note" id="note"></p>
+</section>
+
+<script>
+(() => {
+  const ITEMS = ['HOME','BIO','WORKS','PUBLICATIONS','PRESS','CONTACT'];
+  const ACTIVE = 'BIO';
+  const rnd = (a,b) => a + Math.random()*(b-a);
+  const NS = 'http://www.w3.org/2000/svg';
+
+  const DESC = {
+    today: 'What the site has now: one row of typewriter labels, with the current page circled.',
+    index: 'Numbered like a contents page or a list of movements, set in Redaction at reading size. The number stays small and quiet; the name does the work.',
+    stamp: 'Each label sits at its own angle, as though stamped onto the page. Re-rolled per page load; hover re-stamps a label.',
+    scatter: 'The same misalignment already running on your category pages, applied to the menu: varied heights and gaps, re-rolled each visit.',
+    magnet: 'The labels lean toward your cursor as it approaches, and their letters open up. Move across the menu slowly.',
+    vertical: 'A column down the side instead of a row across the top. Shown on the right, beside the wordmark; it could equally run down the left edge.',
+    collapsed: 'A drawn mark that opens the menu. Costs a tap, but returns roughly a quarter of a phone screen.'
+  };
+  const NOTE = {
+    today: '',
+    index: 'Numbers could equally be work counts, years, or nothing at all. Note it runs taller than today at phone width (195px against 130px), because the type is bigger.',
+    stamp: 'Cheapest of the six: it reuses the randomisation already on the site.',
+    scatter: 'Most consistent with the banners, but the loosest — worth deciding how far is too far.',
+    magnet: 'Only works with a mouse. On a phone it would simply sit still, so it needs a second answer for touch.',
+    vertical: 'Frees the top on a desktop — but measured at phone width it is the tallest option of the six (284px, against 130px today), because a column of six items is simply long. It would need the collapsed treatment on phones.',
+    collapsed: 'The only option that actually solves the phone problem: 54px against today’s 130px. Use it on phones only, and keep the menu open on desktop.'
+  };
+
+  const hdr = document.getElementById('hdr');
+  const stage = document.getElementById('stage');
+  let mode = 'today';
+
+  function roughEllipse(cx,cy,rx,ry,wob){
+    const pts=[]; const st=rnd(-.4,.4);
+    for(let a=st;a<=Math.PI*2+st+.5;a+=.28) pts.push([cx+Math.cos(a)*rx, cy+Math.sin(a)*ry]);
+    return pts.map((p,i)=>(i?'L ':'M ')+(p[0]+rnd(-wob,wob)).toFixed(1)+' '+(p[1]+rnd(-wob,wob)).toFixed(1)).join(' ');
+  }
+  function circle(el){
+    const r = el.getBoundingClientRect(); if(!r.width) return;
+    const padX=10,padY=15, w=r.width+padX*2, h=r.height+padY*2;
+    const s=document.createElementNS(NS,'svg');
+    s.setAttribute('viewBox',`0 0 ${w} ${h}`);
+    s.style.cssText=`position:absolute;left:${-padX}px;top:${-padY}px;width:${w}px;height:${h}px;overflow:visible;pointer-events:none`;
+    [[3,1.7,1.6],[5,2.3,1.1]].forEach(([inset,wob,sw])=>{
+      const p=document.createElementNS(NS,'path');
+      p.setAttribute('d',roughEllipse(w/2,h/2,w/2-inset,h/2-inset,wob));
+      p.setAttribute('fill','none'); p.setAttribute('stroke','currentColor');
+      p.setAttribute('stroke-width',sw); p.setAttribute('stroke-linecap','round');
+      s.appendChild(p);
+    });
+    el.appendChild(s); el.style.background='none';
+  }
+  function asterisk(btn){
+    const s=document.createElementNS(NS,'svg');
+    s.setAttribute('viewBox','0 0 46 46');
+    s.style.cssText='width:46px;height:46px;overflow:visible;color:var(--blue)';
+    for(let i=0;i<3;i++){
+      const a=(Math.PI/3)*i+rnd(-.12,.12), L=15;
+      const p=document.createElementNS(NS,'path');
+      p.setAttribute('d',`M ${23-Math.cos(a)*L+rnd(-1.5,1.5)} ${23-Math.sin(a)*L+rnd(-1.5,1.5)} L ${23+Math.cos(a)*L+rnd(-1.5,1.5)} ${23+Math.sin(a)*L+rnd(-1.5,1.5)}`);
+      p.setAttribute('stroke','currentColor'); p.setAttribute('stroke-width','1.8');
+      p.setAttribute('stroke-linecap','round'); p.setAttribute('fill','none');
+      s.appendChild(p);
+    }
+    btn.innerHTML=''; btn.appendChild(s);
+  }
+
+  function build() {
+    hdr.className = 'hdr';
+    stage.parentElement.className = 'stage' + (stage.classList.contains('phone')?'':'');
+    hdr.innerHTML = '';
+    document.getElementById('label').textContent =
+      (mode==='today'?'TODAY':'DIRECTION — ' + mode.toUpperCase());
+    document.getElementById('desc').textContent = DESC[mode];
+    document.getElementById('note').textContent = NOTE[mode];
+
+    const wm = document.createElement('span');
+    wm.className = 'wm'; wm.textContent = 'Monica Lim';
+    hdr.appendChild(wm);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'menuwrap';
+    const nav = document.createElement('nav');
+    nav.className = 'menu';
+
+    ITEMS.forEach((t, i) => {
+      const a = document.createElement('a');
+      a.href = '#';
+      if (mode === 'index') {
+        const n = document.createElement('span');
+        n.className = 'n'; n.textContent = String(i+1).padStart(2,'0');
+        a.appendChild(n);
+        a.appendChild(document.createTextNode(t.charAt(0) + t.slice(1).toLowerCase()));
+      } else {
+        a.textContent = t;
+      }
+      if (t === ACTIVE) a.classList.add('active');
+      nav.appendChild(a);
+    });
+
+    hdr.classList.add('m-' + mode);
+
+    if (mode === 'collapsed') {
+      const btn = document.createElement('button');
+      btn.className = 'trigger'; btn.setAttribute('aria-label','Open menu');
+      asterisk(btn);
+      btn.addEventListener('click', () => { nav.classList.toggle('open'); asterisk(btn); });
+      wrap.appendChild(btn);
+    }
+    wrap.appendChild(nav);
+    hdr.appendChild(wrap);
+
+    decorate(nav);
+  }
+
+  function decorate(nav) {
+    const links = [...nav.querySelectorAll('a')];
+
+    if (mode === 'stamp') {
+      links.forEach(a => {
+        const set = () => a.style.transform = `rotate(${rnd(-4,4).toFixed(2)}deg)`;
+        set();
+        a.addEventListener('pointerenter', set);
+      });
+    }
+    if (mode === 'scatter') {
+      links.forEach(a => {
+        a.style.transform = `translateY(${rnd(-16,16).toFixed(1)}px)`;
+        a.style.marginLeft = rnd(0,26).toFixed(0) + 'px';
+      });
+    }
+    if (mode === 'magnet') {
+      const move = e => {
+        links.forEach(a => {
+          const r = a.getBoundingClientRect();
+          const dx = e.clientX - (r.left + r.width/2), dy = e.clientY - (r.top + r.height/2);
+          const d = Math.hypot(dx, dy);
+          if (d < 190) {
+            const f = (1 - d/190);
+            a.style.transform = `translate(${(dx*0.16*f).toFixed(1)}px, ${(dy*0.16*f).toFixed(1)}px)`;
+            a.style.letterSpacing = (0.18 + 0.14*f).toFixed(3) + 'em';
+          } else { a.style.transform = ''; a.style.letterSpacing = ''; }
+        });
+      };
+      stage.addEventListener('pointermove', move);
+      stage.addEventListener('pointerleave', () =>
+        links.forEach(a => { a.style.transform=''; a.style.letterSpacing=''; }));
+    }
+    // the current page is circled in every mode except the collapsed one
+    const active = nav.querySelector('a.active');
+    if (active && mode !== 'collapsed') requestAnimationFrame(() => circle(active));
+  }
+
+  document.querySelectorAll('.topbar button[data-m]').forEach(b =>
+    b.addEventListener('click', () => {
+      document.querySelector('.topbar button.on')?.classList.remove('on');
+      b.classList.add('on'); mode = b.dataset.m; build();
+    }));
+  document.getElementById('roll').addEventListener('click', build);
+  document.getElementById('size').addEventListener('click', e => {
+    stage.classList.toggle('phone');
+    e.target.textContent = 'width: ' + (stage.classList.contains('phone') ? 'phone' : 'desktop');
+    build();
+  });
+
+  document.fonts.ready.then(build);
+})();
+</script>
+</body>
+</html>
