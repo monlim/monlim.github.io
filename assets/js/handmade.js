@@ -19,6 +19,10 @@
     navItems.forEach(el => {
       el.style.transform = `translateY(${rnd(-14, 14).toFixed(1)}px)`;
       el.style.marginLeft = Math.round(rnd(0, 18)) + 'px';
+      // The transform gives this item its own stacking context; lift it so
+      // the WORKS dropdown stays above the page. Set here as well as in the
+      // stylesheet so a stale cached style.css can't reintroduce the bug.
+      if (el.classList.contains('has-menu')) el.style.zIndex = '50';
     });
   }
 

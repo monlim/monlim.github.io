@@ -89,7 +89,10 @@ img { max-width: 100%; height: auto; display: block; }
 .nav a.active { background: var(--chip); }
 
 /* WORKS dropdown */
-.nav .has-menu { position: relative; }
+/* z-index matters: handmade.js offsets this item with a transform, which makes
+   it its own stacking context. Without a z-index here the dropdown is trapped
+   inside that context and the page content below paints over it. */
+.nav .has-menu { position: relative; z-index: 50; }
 .nav .has-menu > a::after { content: ""; }
 .nav .menu {
   display: none;
